@@ -15,6 +15,9 @@ public class AutonomousTest extends LinearOpMode{
         leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         leftMotor.setMaxSpeed(encoder ticks permsecond);
+        // can be brake or float
+        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE)
+
         
         waitForStart();
         //encoder tick value to reach
