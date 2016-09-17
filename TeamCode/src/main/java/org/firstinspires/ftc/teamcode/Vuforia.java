@@ -37,18 +37,24 @@ public class Vuforia extends LinearOpMode {
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
-        //add trackable objects to fuforia instance from assets folder
-        VuforiaTrackables images = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
+        //add trackable objects to vuforia instance from assets folder
+        VuforiaTrackables parts = this.vuforia.loadTrackablesFromAsset("FTC_2016-17");
 
-        VuforiaTrackable gearsTarget = images.get(0);
-        gearsTarget.setName("Gear");
+        VuforiaTrackable wheelsTarget = parts.get(0);
+        wheelsTarget.setName("Wheels");
 
-        VuforiaTrackable toolsTarget = images.get(1);
+        VuforiaTrackable toolsTarget = parts.get(1);
         toolsTarget.setName("Tools");
 
+        VuforiaTrackable legosTarget = parts.get(2);
+        legosTarget.setName("Legos");
+
+        VuforiaTrackable gearsTarget = parts.get(3);
+        gearsTarget.setName("Gears");
+
         //add all trackables in a list for convenience
-        List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-        allTrackables.addAll(images);
+        List<VuforiaTrackable> allTrackables = new ArrayList<>();
+        allTrackables.addAll(parts);
 
         float botWidth = (float) 457.2;
         float feildWidth = 3580;
@@ -56,6 +62,35 @@ public class Vuforia extends LinearOpMode {
         /*to locate the robot based on the location of the trackable
         we must tell vuforia where the trackables are on the feild
         we do this by using transformations from the origin to tell vuforia where the objects are*/
+
+        //place the wheels on the wall.
+        OpenGLMatrix wheelsTargetLocation = OpenGLMatrix
+                .translation(305, feildWidth/2,  6)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AngleUnit.DEGREES, 90, 90, 0));
+        wheelsTarget.setLocation(wheelsTargetLocation);
+        RobotLog.ii(TAG, "Wheel Target=%s", format(wheelsTargetLocation));
+
+
+        //place the tools on the wall
+        OpenGLMatrix toolsTargetLocation = OpenGLMatrix
+                .translation(-feildWidth/2, -762, 6)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XYX,
+                        AngleUnit.DEGREES, 90, 90, 0));
+        toolsTarget.setLocation(toolsTargetLocation);
+        RobotLog.ii(TAG, "Tool Target=%s", format(toolsTargetLocation));
+
+        //place the legos on the wall
+        OpenGLMatrix legosTargetLocation = OpenGLMatrix
+                .translation(-762, feildWidth/2,  6)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AngleUnit.DEGREES, 90, 90, 0));
+        legosTarget.setLocation(legosTargetLocation);
+        RobotLog.ii(TAG, "Lego Target=%s", format(legosTargetLocation));
+
 
         //place the gears on the wall
         OpenGLMatrix gearsTargetLocation = OpenGLMatrix
@@ -66,14 +101,6 @@ public class Vuforia extends LinearOpMode {
         gearsTarget.setLocation(gearsTargetLocation);
         RobotLog.ii(TAG, "Gear Target=%s", format(gearsTargetLocation));
 
-        //place the tools on the wall
-        OpenGLMatrix toolsTargetLocation = OpenGLMatrix
-                .translation(-feildWidth/2, -762, 6)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XYX,
-                        AngleUnit.DEGREES, 90, 90, 0));
-        toolsTarget.setLocation(toolsTargetLocation);
-        RobotLog.ii(TAG, "Tool Target=%s", format(toolsTargetLocation));
 
         //make a another transformation matrix to describe where phone in on robot
         OpenGLMatrix phoneLocationObBot = OpenGLMatrix
@@ -85,14 +112,16 @@ public class Vuforia extends LinearOpMode {
         RobotLog.ii(TAG, "phone=%s", format(phoneLocationObBot));
 
         //add trackable listeners
-        ((VuforiaTrackableDefaultListener)gearsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)wheelsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
         ((VuforiaTrackableDefaultListener)toolsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)legosTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)gearsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
 
         telemetry.addData("Vuforia", " Setup is Complete");
-
+        telemetry.update();
         waitForStart();
 
-        images.activate();
+        parts.activate();
 
         while (opModeIsActive()) {
 
