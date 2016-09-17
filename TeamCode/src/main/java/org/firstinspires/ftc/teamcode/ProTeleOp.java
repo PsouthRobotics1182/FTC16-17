@@ -49,8 +49,8 @@ public class ProTeleOp extends OpMode {
         double leftPower = gamepad1.left_stick_y;
         double rightPower = gamepad1.right_stick_y;
 
-        leftPower = scale(leftPower);
-        rightPower = scale(rightPower);
+        leftPower = expo(leftPower);
+        rightPower = expo(rightPower);
 
         leftPower = Range.clip(leftPower, -1, 1);
         rightPower = Range.clip(rightPower, -1, 1);
@@ -58,11 +58,21 @@ public class ProTeleOp extends OpMode {
         leftMotor.setPower(leftPower);
         rightMotor.setPower(rightPower);
 
+        telemetry.addData("Left Motor Position: ", leftMotor.getCurrentPosition());
+        telemetry.addData("Right Motor Position: ", rightMotor.getCurrentPosition());
+
     }
 
-    public double scale(double power){
-        power = power * power * power;
-        return power;
+    public double expo(double number) {
+        double scaleNumber;
+        if (number > 0)
+            scaleNumber = 1.0672 / (1 + Math.pow(Math.E, (-9 * (number - 0.7))));
+        else
+            scaleNumber = 1.0672 / (1 + Math.pow(Math.E, (-9 * (-(number) - 0.7))));
+        if (scaleNumber > 1)
+            scaleNumber = 1;
+        if (scaleNumber < -1)
+            scaleNumber = -1;
+        return scaleNumber;
     }
-
 }
