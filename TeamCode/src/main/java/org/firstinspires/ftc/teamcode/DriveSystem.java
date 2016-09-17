@@ -32,12 +32,14 @@ public class DriveSystem extends LinearOpMode {
     int wheelcount;
     DcMotor.RunMode runMode;
     DcMotorSimple.Direction rightDirection, leftDirection;
-    public DriveSystem(int wheelCount, DcMotorSimple.Direction leftDirection, DcMotorSimple.Direction rightDirection){
+    public DriveSystem(){
+
+    }
+    public void configureMotors(int wheelCount, DcMotorSimple.Direction leftDirection, DcMotorSimple.Direction rightDirection){
         this.wheelcount = wheelCount;
         this.leftDirection = leftDirection;
         this.rightDirection = leftDirection;
-    }
-    public void configureMotors(){
+
         if(wheelcount == 2){
 
             leftMotor = hardwareMap.dcMotor.get("leftM");
@@ -75,7 +77,7 @@ public class DriveSystem extends LinearOpMode {
     }
 
 
-    public void setDirection(String direction){
+    private void setDirection(String direction){
         // // TODO: 9/17/2016 find proper motor directions
         if (direction.equals("FORWARD")){
             leftMotor.setDirection(leftDirection);
