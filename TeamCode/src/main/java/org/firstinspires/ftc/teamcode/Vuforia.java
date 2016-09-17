@@ -59,7 +59,7 @@ public class Vuforia extends LinearOpMode {
 
         //place the gears on the wall
         OpenGLMatrix gearsTargetLocation = OpenGLMatrix
-                .translation(-feildWidth/2, -305, 5)
+                .translation(-feildWidth/2, -305, 6)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -68,7 +68,7 @@ public class Vuforia extends LinearOpMode {
 
         //place the tools on the wall
         OpenGLMatrix toolsTargetLocation = OpenGLMatrix
-                .translation(-feildWidth/2, -762, 5)
+                .translation(-feildWidth/2, -762, 6)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XYX,
                         AngleUnit.DEGREES, 90, 90, 0));
