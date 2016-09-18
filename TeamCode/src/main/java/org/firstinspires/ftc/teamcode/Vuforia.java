@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
@@ -19,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Autonomous
 public class Vuforia extends LinearOpMode {
 
@@ -32,7 +31,7 @@ public class Vuforia extends LinearOpMode {
     OpenGLMatrix lastPostition;
 
     @Override
-    public void runOpMode() throws InterruptedException{
+    public void runOpMode() throws InterruptedException {
 
         //setup vuforia parameters
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -68,7 +67,7 @@ public class Vuforia extends LinearOpMode {
 
         //place the wheels on the wall.
         OpenGLMatrix wheelsTargetLocation = OpenGLMatrix
-                .translation(305, feildWidth/2,  6)
+                .translation(305, feildWidth / 2, 6)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -78,7 +77,7 @@ public class Vuforia extends LinearOpMode {
 
         //place the tools on the wall
         OpenGLMatrix toolsTargetLocation = OpenGLMatrix
-                .translation(-feildWidth/2, -762, 6)
+                .translation(-feildWidth / 2, -762, 6)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XYX,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -87,7 +86,7 @@ public class Vuforia extends LinearOpMode {
 
         //place the legos on the wall
         OpenGLMatrix legosTargetLocation = OpenGLMatrix
-                .translation(-762, feildWidth/2,  6)
+                .translation(-762, feildWidth / 2, 6)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -97,7 +96,7 @@ public class Vuforia extends LinearOpMode {
 
         //place the gears on the wall
         OpenGLMatrix gearsTargetLocation = OpenGLMatrix
-                .translation(-feildWidth/2, -305, 6)
+                .translation(-feildWidth / 2, -305, 6)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -108,17 +107,17 @@ public class Vuforia extends LinearOpMode {
         //make a another transformation matrix to describe where phone in on robot
         OpenGLMatrix phoneLocationObBot = OpenGLMatrix
                 //TODO measure these values for testing and reenter
-                .translation(botWidth/2, 0 , 9)
+                .translation(botWidth / 2, 0, 9)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.YZY,
                         AngleUnit.DEGREES, 0, 0, 0));
         RobotLog.ii(TAG, "phone=%s", format(phoneLocationObBot));
 
         //add trackable listeners
-        ((VuforiaTrackableDefaultListener)wheelsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)toolsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)legosTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)gearsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener) wheelsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener) toolsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener) legosTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener) gearsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
 
         telemetry.addData("Vuforia", " Setup is Complete");
         telemetry.update();
@@ -130,15 +129,15 @@ public class Vuforia extends LinearOpMode {
         while (opModeIsActive()) {
 
             for (VuforiaTrackable trackable : allTrackables) {
-                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
+                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
                 //prints out position of trackable... hopefully
                 //telemetry.addData(trackable.getName(), format(((VuforiaTrackableDefaultListener)trackable.getListener()).getPose()));
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                if  (robotLocationTransform != null)
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
+                if (robotLocationTransform != null)
                     lastPostition = robotLocationTransform;
             }
-            if (lastPostition != null){
-                telemetry.addData("Position", lastPostition);
+            if (lastPostition != null) {
+                telemetry.addData("Position", format(lastPostition));
             } else {
                 telemetry.addData("Position", "Unknown");
             }
@@ -148,7 +147,7 @@ public class Vuforia extends LinearOpMode {
     }
 
     //small method to extract position information from a transformation matrix
-    String format(OpenGLMatrix matrix){
+    String format(OpenGLMatrix matrix) {
         return matrix.formatAsTransform();
     }
 }
