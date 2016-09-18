@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -125,6 +126,7 @@ public class Vuforia extends LinearOpMode {
 
         //begin tracking the images
         parts.activate();
+
         while (opModeIsActive()) {
 
             for (VuforiaTrackable trackable : allTrackables) {
@@ -136,7 +138,7 @@ public class Vuforia extends LinearOpMode {
                     lastPostition = robotLocationTransform;
             }
             if (lastPostition != null){
-                telemetry.addData("Position", format(lastPostition));
+                telemetry.addData("Position", lastPostition);
             } else {
                 telemetry.addData("Position", "Unknown");
             }
