@@ -125,13 +125,12 @@ public class Vuforia extends LinearOpMode {
 
         //begin tracking the images
         parts.activate();
-
         while (opModeIsActive()) {
 
             for (VuforiaTrackable trackable : allTrackables) {
                 telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
                 //prints out position of trackable... hopefully
-                telemetry.addData(trackable.getName(), format(((VuforiaTrackableDefaultListener)trackable.getListener()).getPose()));
+                //telemetry.addData(trackable.getName(), format(((VuforiaTrackableDefaultListener)trackable.getListener()).getPose()));
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
                 if  (robotLocationTransform != null)
                     lastPostition = robotLocationTransform;
@@ -144,7 +143,6 @@ public class Vuforia extends LinearOpMode {
             telemetry.update();
             idle();
         }
-
     }
 
     //small method to extract position information from a transformation matrix
