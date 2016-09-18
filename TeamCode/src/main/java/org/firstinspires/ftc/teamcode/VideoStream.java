@@ -13,8 +13,8 @@ public class VideoStream extends Activity {
     private static final int CAMERA_REQUEST = 1888;
 
     View relativeLayout;
-    public VideoStream(View relativeLayout){
-        this.relativeLayout = relativeLayout;
+    public VideoStream(View layout){
+        relativeLayout = layout;
     }
     public void stream(){
         relativeLayout.post(new Runnable() {
