@@ -27,7 +27,8 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. *//*
+
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
@@ -36,12 +37,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+*/
 /**
  * Linear Tele Op Mode
  * <p>
  * Enables control of the robot via the gamepad.
  * NOTE: This op mode will not work with the NXT Motor Controllers. Use an Nxt op mode instead.
- */
+ *//*
+
 public class LinearK9TeleOp extends LinearOpMode {
 
   // position of the neck servo
@@ -116,3 +119,4 @@ public class LinearK9TeleOp extends LinearOpMode {
     }
   }
 }
+*/

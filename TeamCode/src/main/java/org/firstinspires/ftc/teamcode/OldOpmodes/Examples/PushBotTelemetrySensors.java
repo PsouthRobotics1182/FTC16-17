@@ -1,3 +1,4 @@
+/*
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
@@ -6,6 +7,7 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 //
 // PushBotTelemetrySensors
 //
+*/
 /**
  * Provide telemetry provided by the PushBotHardwareSensors class.
  *
@@ -26,7 +28,8 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
  *          sensor.
  *     17 - The value returned by the optical distance sensor class, which
  *          indicates the amount of reflected light detected by the sensor.
- */
+ *//*
+
 public class PushBotTelemetrySensors extends PushBotHardwareSensors
 
 {
@@ -34,11 +37,13 @@ public class PushBotTelemetrySensors extends PushBotHardwareSensors
     //
     // PushBotTelemetrySensors
     //
-    /**
+    */
+/**
      * Construct the class.
      *
      * The system calls this member when the class is instantiated.
-     */
+     *//*
+
     public PushBotTelemetrySensors ()
 
     {
@@ -58,9 +63,11 @@ public class PushBotTelemetrySensors extends PushBotHardwareSensors
     //
     // update_telemetry
     //
-    /**
+    */
+/**
      * Update the telemetry with current values from the base class.
-     */
+     *//*
+
     public void update_telemetry ()
 
     {
@@ -103,3 +110,4 @@ public class PushBotTelemetrySensors extends PushBotHardwareSensors
     } // update_telemetry
 
 } // PushBotTelemetrySensors
+*/

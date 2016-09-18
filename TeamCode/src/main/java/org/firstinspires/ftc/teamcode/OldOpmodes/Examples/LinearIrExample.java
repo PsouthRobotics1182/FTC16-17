@@ -27,7 +27,8 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. *//*
+
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
@@ -35,9 +36,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 
+*/
 /**
  * A simple example of a linear op mode that will approach an IR beacon
- */
+ *//*
+
 public class LinearIrExample extends LinearOpMode {
 
   final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
@@ -95,3 +98,4 @@ public class LinearIrExample extends LinearOpMode {
     motorLeft.setPower(0);
   }
 }
+*/

@@ -26,7 +26,8 @@
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ *//*
+
 
 package com.qualcomm.ftcrobotcontroller.opmodes.Examples;
 
@@ -137,3 +138,4 @@ public class CompassCalibration extends OpMode {
     else { return "Calibration Succeeded." ; }
   }
 }
+*/

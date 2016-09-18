@@ -27,7 +27,8 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. *//*
+
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
@@ -40,6 +41,7 @@ import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
+*/
 /*
  *
  * This is an example LinearOpMode that shows how to use
@@ -50,7 +52,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  *
  * You can use the X button on either gamepad to turn the LED on and off.
  *
- */
+ *//*
+
 public class MRRGBExample extends LinearOpMode {
 
   ColorSensor sensorRGB;
@@ -154,3 +157,4 @@ public class MRRGBExample extends LinearOpMode {
     }
   }
 }
+*/

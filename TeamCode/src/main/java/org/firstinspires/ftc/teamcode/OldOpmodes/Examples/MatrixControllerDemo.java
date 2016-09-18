@@ -27,7 +27,8 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. *//*
+
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
@@ -42,9 +43,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.HashSet;
 import java.util.Set;
 
+*/
 /**
  * A simple example of all motors and servos oscillating
- */
+ *//*
+
 public class MatrixControllerDemo extends OpMode {
 
     private ElapsedTime motorOscTimer = new ElapsedTime(0);
@@ -86,11 +89,13 @@ public class MatrixControllerDemo extends OpMode {
         motor3 = hardwareMap.dcMotor.get("motor_3");
         motor4 = hardwareMap.dcMotor.get("motor_4");
 
-        /*
+        */
+/*
          * A set of motors to use with the Matrix motor controller's
          * pending feature.  See example below.  Note that this is
          * completely optional.
-         */
+         *//*
+
         motorSet.add(motor1);
         motorSet.add(motor2);
         motorSet.add(motor3);
@@ -101,7 +106,8 @@ public class MatrixControllerDemo extends OpMode {
         servo3 = hardwareMap.servo.get("servo_3");
         servo4 = hardwareMap.servo.get("servo_4");
 
-        /*
+        */
+/*
          * Matrix controllers are special.
          *
          * A Matrix controller is one controller with both motors and servos
@@ -113,17 +119,20 @@ public class MatrixControllerDemo extends OpMode {
          * of the controller is "MatrixController" so the motor controller
          * instance is "MatrixControllerMotor" and the servo controller
          * instance is "MatrixControllerServo".
-         */
+         *//*
+
         mc = (MatrixDcMotorController)hardwareMap.dcMotorController.get("MatrixController");
         motor1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         motor2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         motor3.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         motor4.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-        /*
+        */
+/*
          * Servos are not enabled by default.  Software must call pwmEnable()
          * for servos to function.
-         */
+         *//*
+
         sc = hardwareMap.servoController.get("MatrixController");
         sc.pwmEnable();
     }
@@ -139,7 +148,8 @@ public class MatrixControllerDemo extends OpMode {
     @Override
     public void stop()
     {
-        /*
+        */
+/*
          * An example of setting power for individual motors as normal.
          *
          * For the Matrix controller, the methods take effect immediately
@@ -154,7 +164,8 @@ public class MatrixControllerDemo extends OpMode {
          * real world negative impacts, however teams may choose to use
          * the controller's setMotorPower() method if they desire precise
          * simultaneous motor operations.  See example in handleMotors().
-         */
+         *//*
+
         motor1.setPower(0.0);
         motor2.setPower(0.0);
         motor3.setPower(0.0);
@@ -162,17 +173,20 @@ public class MatrixControllerDemo extends OpMode {
         sc.pwmDisable();
     }
 
-    /*
+    */
+/*
      * handleMotors
      *
      * Oscillate the motors.
-     */
+     *//*
+
     protected void handleMotors()
     {
         if ((firstMotors) || (motorOscTimer.time() > MOTOR_OSC_FREQ)) {
             motorPower = -motorPower;
 
-            /*
+            */
+/*
              * The MatrixDcMotorController's setMotorPower() method may take
              * a collection of motors.  If this is chosen, then the controller will
              * set a pending bit.  The pending bit tells the controller to
@@ -181,18 +195,21 @@ public class MatrixControllerDemo extends OpMode {
              *
              * When the pending bit is cleared all motor power values are applied
              * simultaneously.  setMotorPower() handles the pending bit for you.
-             */
+             *//*
+
             mc.setMotorPower(motorSet, motorPower);
             motorOscTimer.reset();
             firstMotors = false;
         }
     }
 
-    /*
+    */
+/*
      * handleServos
      *
      * Oscillate the servos.
-     */
+     *//*
+
     protected void handleServos()
     {
         if ((firstServos) || (servoOscTimer.time() > SERVO_OSC_FREQ)) {
@@ -210,11 +227,13 @@ public class MatrixControllerDemo extends OpMode {
         }
     }
 
-    /*
+    */
+/*
      * handleBattery
      *
      * The Matrix controller has a separate battery whose voltage can be read.
-     */
+     *//*
+
     protected void handleBattery()
     {
         if ((firstBattery) || (spamPrevention.time() > SPAM_PREVENTION_FREQ)) {
@@ -233,3 +252,4 @@ public class MatrixControllerDemo extends OpMode {
         handleBattery();
     }
 }
+*/

@@ -27,7 +27,8 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. *//*
+
 package com.qualcomm.ftcrobotcontroller.opmodes.Examples;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -38,9 +39,11 @@ import com.qualcomm.robotcore.util.TypeConversion;
 
 import java.util.concurrent.locks.Lock;
 
+*/
 /**
  * A simple example of a linear op mode that shows how to change the I2C address.
- */
+ *//*
+
 public class LinearI2cAddressChange extends LinearOpMode {
 
   public static final int ADDRESS_SET_NEW_I2C_ADDRESS = 0x70;
@@ -167,11 +170,15 @@ public class LinearI2cAddressChange extends LinearOpMode {
     telemetry.addData("I2cAddressChange", "Successfully changed the I2C address." + String.format("New address: 0x%02x", newAddress));
     RobotLog.i("Successfully changed the I2C address." + String.format("New address: 0x%02x", newAddress));
 
-    /**** IMPORTANT NOTE ******/
+    */
+/**** IMPORTANT NOTE ******//*
+
     // You need to add a line like this at the top of your op mode
     // to update the I2cAddress in the driver.
     //irSeeker.setI2cAddress(newAddress);
-    /***************************/
+    */
+/***************************//*
+
 
   }
 
@@ -215,3 +222,4 @@ public class LinearI2cAddressChange extends LinearOpMode {
     }
   }
 }
+*/

@@ -1,9 +1,11 @@
+/*
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 //------------------------------------------------------------------------------
 //
 // PushBotAuto
 //
+*/
 /**
  * Provide a basic autonomous operational mode that uses the left and right
  * drive motors and associated encoders implemented using a state machine for
@@ -11,7 +13,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  *
  * @author SSI Robotics
  * @version 2015-08-01-06-01
- */
+ *//*
+
 public class PushBotAuto extends PushBotTelemetry
 
 {
@@ -19,11 +22,13 @@ public class PushBotAuto extends PushBotTelemetry
     //
     // PushBotAuto
     //
-    /**
+    */
+/**
      * Construct the class.
      *
      * The system calls this member when the class is instantiated.
-     */
+     *//*
+
     public PushBotAuto ()
 
     {
@@ -43,11 +48,13 @@ public class PushBotAuto extends PushBotTelemetry
     //
     // start
     //
-    /**
+    */
+/**
      * Perform any actions that are necessary when the OpMode is enabled.
      *
      * The system calls this member once when the OpMode is enabled.
-     */
+     *//*
+
     @Override public void start ()
 
     {
@@ -67,13 +74,15 @@ public class PushBotAuto extends PushBotTelemetry
     //
     // loop
     //
-    /**
+    */
+/**
      * Implement a state machine that controls the robot during auto-operation.
      * The state machine uses a class member and encoder input to transition
      * between states.
      *
      * The system calls this member repeatedly while the OpMode is running.
-     */
+     *//*
+
     @Override public void loop ()
 
     {
@@ -216,13 +225,16 @@ public class PushBotAuto extends PushBotTelemetry
     //
     // v_state
     //
-    /**
+    */
+/**
      * This class member remembers which state is currently active.  When the
      * start method is called, the state will be initialized (0).  When the loop
      * starts, the state will change from initialize to state_1.  When state_1
      * actions are complete, the state will change to state_2.  This implements
      * a state machine for the loop method.
-     */
+     *//*
+
     private int v_state = 0;
 
 } // PushBotAuto
+*/

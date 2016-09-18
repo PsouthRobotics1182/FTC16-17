@@ -26,7 +26,8 @@
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ *//*
+
 
 package com.qualcomm.ftcrobotcontroller.opmodes.Examples;
 
@@ -35,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 
+*/
 /**
  * Follow an IR Beacon
  * <p>
@@ -44,7 +46,8 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
  * Make sure the side of the beacon with the LED on is facing the robot. <br>
  * Turn on the IR beacon. The robot will now follow the IR beacon. <br>
  * To stop the robot, turn the IR beacon off. <br>
- */
+ *//*
+
 public class IrSeekerOp extends OpMode {
 
   final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
@@ -111,3 +114,4 @@ public class IrSeekerOp extends OpMode {
     DbgLog.msg(irSeeker.toString());
   }
 }
+*/

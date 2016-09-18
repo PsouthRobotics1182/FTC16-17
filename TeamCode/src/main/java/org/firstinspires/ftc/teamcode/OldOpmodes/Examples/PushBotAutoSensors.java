@@ -1,9 +1,11 @@
+/*
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 //------------------------------------------------------------------------------
 //
 // PushBotAutoSensors
 //
+*/
 /**
  * Provide a basic autonomous operational mode that uses the left and right
  * drive motors and associated encoders, the left arm motor and associated touch
@@ -12,7 +14,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  *
  * @author SSI Robotics
  * @version 2015-08-13-19-48
- */
+ *//*
+
 public class PushBotAutoSensors extends PushBotTelemetrySensors
 
 {
@@ -20,11 +23,13 @@ public class PushBotAutoSensors extends PushBotTelemetrySensors
     //
     // PushBotAutoSensors
     //
-    /**
+    */
+/**
      * Construct the class.
      *
      * The system calls this member when the class is instantiated.
-     */
+     *//*
+
     public PushBotAutoSensors ()
 
     {
@@ -44,11 +49,13 @@ public class PushBotAutoSensors extends PushBotTelemetrySensors
     //
     // start
     //
-    /**
+    */
+/**
      * Perform any actions that are necessary when the OpMode is enabled.
      *
      * The system calls this member once when the OpMode is enabled.
-     */
+     *//*
+
     @Override public void start ()
 
     {
@@ -68,13 +75,15 @@ public class PushBotAutoSensors extends PushBotTelemetrySensors
     //
     // loop
     //
-    /**
+    */
+/**
      * Implement a state machine that controls the robot during auto-operation.
      * The state machine uses a class member and sensor input to transition
      * between states.
      *
      * The system calls this member repeatedly while the OpMode is running.
-     */
+     *//*
+
     @Override public void loop ()
 
     {
@@ -289,9 +298,11 @@ public class PushBotAutoSensors extends PushBotTelemetrySensors
     //
     // update_arm_state
     //
-    /**
+    */
+/**
      * Implement a state machine that controls the arm during auto-operation.
-     */
+     *//*
+
     public void update_arm_state ()
 
     {
@@ -345,26 +356,31 @@ public class PushBotAutoSensors extends PushBotTelemetrySensors
     //
     // v_state
     //
-    /**
+    */
+/**
      * This class member remembers which state is currently active.  When the
      * start method is called, the state will be initialize (0).  During the
      * first iteration of the loop method, the state will change from initialize
      * to state_1.  When state_1 actions are complete, the state will change to
      * state_2.  This implements a state machine for the loop method.
-     */
+     *//*
+
     private int v_state = 0;
 
     //--------------------------------------------------------------------------
     //
     // v_arm_state
     //
-    /**
+    */
+/**
      * This class member remembers which state is currently active.  When the
      * start method is called, the state will be initialize (0).  During the
      * first iteration of the loop method, the state will change from initialize
      * to state_1.  When state_1 actions are complete, the state will change to
      * state_2.  This implements a state machine for the loop method.
-     */
+     *//*
+
     private int v_arm_state = 0;
 
 } // PushBotAutoSensors
+*/

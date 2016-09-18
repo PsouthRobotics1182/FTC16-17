@@ -27,7 +27,8 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. *//*
+
 package com.qualcomm.ftcrobotcontroller.opmodes.Examples;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -35,11 +36,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+*/
 /**
  * TeleOp Mode
  * <p>
  * Enables control of the robot via the gamepad
- */
+ *//*
+
 public class K9Line extends OpMode {
 
 	final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
@@ -55,28 +58,35 @@ public class K9Line extends OpMode {
 	Servo arm;
 	LightSensor reflectedLight;
 
-	/**
+	*/
+/**
 	 * Constructor
-	 */
+	 *//*
+
 	public K9Line() {
 
 	}
 
-	/*
+	*/
+/*
 	 * Code to run when the op mode is first enabled goes here
 	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
-	 */
+	 *//*
+
 	@Override
 	public void init() {
 
-		/*
+		*/
+/*
 		 * Use the hardwareMap to get the dc motors and servos by name.
 		 * Note that the names of the devices must match the names used
 		 * when you configured your robot and created the configuration file.
-		 */
+		 *//*
 
-		/*
+
+		*/
+/*
 		 * For the demo Tetrix K9 bot we assume the following,
 		 *   There are two motors "motor_1" and "motor_2"
 		 *   "motor_1" is on the right side of the bot.
@@ -85,7 +95,8 @@ public class K9Line extends OpMode {
 		 * We also assume that there are two servos "servo_1" and "servo_6"
 		 *    "servo_1" controls the arm joint of the manipulator.
 		 *    "servo_6" controls the claw joint of the manipulator.
-		 */
+		 *//*
+
 		motorRight = hardwareMap.dcMotor.get("motor_2");
 		motorLeft = hardwareMap.dcMotor.get("motor_1");
 		motorLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -97,21 +108,25 @@ public class K9Line extends OpMode {
 		armPosition = 0.2;
 		clawPosition = 0.25;
 
-		/*
+		*/
+/*
 		 * We also assume that we have a LEGO light sensor
 		 * with a name of "light_sensor" configured for our robot.
-		 */
+		 *//*
+
 		reflectedLight = hardwareMap.lightSensor.get("light_sensor");
 
         // turn on LED of light sensor.
         reflectedLight.enableLed(true);
 	}
 
-	/*
+	*/
+/*
 	 * This method will be called repeatedly in a loop
 	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
-	 */
+	 *//*
+
 	@Override
 	public void loop() {
 		double reflection = 0.0;
@@ -121,48 +136,62 @@ public class K9Line extends OpMode {
 		arm.setPosition(armPosition);
 		claw.setPosition(clawPosition);
 
-        /*
+        */
+/*
          * As a temporary fix, turn on LED in run() event rather than in start().
-         */
+         *//*
+
         // turn on LED of light sensor.
         //reflectedLight.enableLed(true);
 
-		/*
+		*/
+/*
 		 * read the light sensor.
-		 */
+		 *//*
+
 		reflection = reflectedLight.getLightDetected();
 
-		/*
+		*/
+/*
 		 * compare measured value to threshold.
-		 */
+		 *//*
+
 		if (reflection < LIGHT_THRESHOLD) {
-			/*
+			*/
+/*
 			 * if reflection is less than the threshold value, then assume we are above dark spot.
 			 * turn to the right.
-			 */
+			 *//*
+
 			left = MOTOR_POWER;
 			right = 0.0;
 		} else {
-			/*
+			*/
+/*
 			 * assume we are over a light spot.
 			 * turn to the left.
-			 */
+			 *//*
+
 			left = 0.0;
 			right = MOTOR_POWER;
 		}
 
-		/*
+		*/
+/*
 		 * set the motor power
-		 */
+		 *//*
+
 		motorRight.setPower(left);
 		motorLeft.setPower(right);
 
-		/*
+		*/
+/*
 		 * Send telemetry data back to driver station. Note that if we are using
 		 * a legacy NXT-compatible motor controller, then the getPower() method
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
-		 */
+		 *//*
+
 
 		telemetry.addData("Text", "*** Robot Data***");
 		telemetry.addData("reflection", "reflection:  " + Double.toString(reflection));
@@ -170,14 +199,17 @@ public class K9Line extends OpMode {
 		telemetry.addData("right tgt pwr", "right pwr: " + Double.toString(right));
 	}
 
-	/*
+	*/
+/*
 	 * Code to run when the op mode is first disabled goes here
 	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
-	 */
+	 *//*
+
 	@Override
 	public void stop() {
 
 	}
 
 }
+*/

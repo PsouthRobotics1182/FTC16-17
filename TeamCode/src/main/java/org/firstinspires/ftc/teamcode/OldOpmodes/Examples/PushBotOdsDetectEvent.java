@@ -1,9 +1,11 @@
+/*
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 //------------------------------------------------------------------------------
 //
 // PushBotOdsDetectEvent
 //
+*/
 /**
  * Provide a basic autonomous operational mode that demonstrates the use of an
  * optical distance sensor to detect a line implemented using a state machine
@@ -11,7 +13,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  *
  * @author SSI Robotics
  * @version 2015-08-30-11-45
- */
+ *//*
+
 public class PushBotOdsDetectEvent extends PushBotTelemetrySensors
 
 {
@@ -19,11 +22,13 @@ public class PushBotOdsDetectEvent extends PushBotTelemetrySensors
     //
     // PushBotOdsDetectEvent
     //
-    /**
+    */
+/**
      * Construct the class.
      *
      * The system calls this member when the class is instantiated.
-     */
+     *//*
+
     public PushBotOdsDetectEvent ()
 
     {
@@ -43,11 +48,13 @@ public class PushBotOdsDetectEvent extends PushBotTelemetrySensors
     //
     // loop
     //
-    /**
+    */
+/**
      * Implement a state machine that controls the robot during auto-operation.
      *
      * The system calls this member repeatedly while the OpMode is running.
-     */
+     *//*
+
     @Override public void loop ()
 
     {
@@ -75,3 +82,4 @@ public class PushBotOdsDetectEvent extends PushBotTelemetrySensors
     } // loop
 
 } // PushBotOdsDetectEvent
+*/

@@ -1,9 +1,11 @@
+/*
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 //------------------------------------------------------------------------------
 //
 // PushBotManualSensors
 //
+*/
 /**
  * Provide a basic manual operational mode that uses the left and right
  * drive motors, left arm motor, servo motors and gamepad input from two
@@ -13,7 +15,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  *
  * @author SSI Robotics
  * @version 2015-08-25-14-40
- */
+ *//*
+
 public class PushBotManualSensors extends PushBotTelemetrySensors
 
 {
@@ -21,11 +24,13 @@ public class PushBotManualSensors extends PushBotTelemetrySensors
     //
     // PushBotManualSensors
     //
-    /**
+    */
+/**
      * Construct the class.
      *
      * The system calls this member when the class is instantiated.
-     */
+     *//*
+
     public PushBotManualSensors ()
 
     {
@@ -45,13 +50,15 @@ public class PushBotManualSensors extends PushBotTelemetrySensors
     //
     // loop
     //
-    /**
+    */
+/**
      * Implement a state machine that controls the robot during
      * manual-operation.  The state machine uses gamepad and sensor input to
      * transition between states.
      *
      * The system calls this member repeatedly while the OpMode is running.
-     */
+     *//*
+
     @Override public void loop ()
 
     {
@@ -188,3 +195,4 @@ public class PushBotManualSensors extends PushBotTelemetrySensors
     private boolean v_raise_arm_automatically = false;
 
 } // PushBotManualSensors
+*/

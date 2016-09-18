@@ -1,9 +1,11 @@
+/*
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 //------------------------------------------------------------------------------
 //
 // PushBotTelemetry
 //
+*/
 /**
  * Provide telemetry provided by the PushBotHardware class.
  *
@@ -32,7 +34,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  *     09 - The value of gamepad 2's Y button (true/false).
  *     10 - The value of gamepad 1's left trigger value.
  *     11 - The value of gamepad 1's right trigger value.
- */
+ *//*
+
 public class PushBotTelemetry extends PushBotHardware
 
 {
@@ -40,11 +43,13 @@ public class PushBotTelemetry extends PushBotHardware
     //
     // PushBotTelemetry
     //
-    /**
+    */
+/**
      * Construct the class.
      *
      * The system calls this member when the class is instantiated.
-     */
+     *//*
+
     public PushBotTelemetry ()
 
     {
@@ -64,9 +69,11 @@ public class PushBotTelemetry extends PushBotHardware
     //
     // update_telemetry
     //
-    /**
+    */
+/**
      * Update the telemetry with current values from the base class.
-     */
+     *//*
+
     public void update_telemetry ()
 
     {
@@ -106,9 +113,11 @@ public class PushBotTelemetry extends PushBotHardware
     //
     // update_gamepad_telemetry
     //
-    /**
+    */
+/**
      * Update the telemetry with current gamepad readings.
-     */
+     *//*
+
     public void update_gamepad_telemetry ()
 
     {
@@ -129,9 +138,11 @@ public class PushBotTelemetry extends PushBotHardware
     //
     // set_first_message
     //
-    /**
+    */
+/**
      * Update the telemetry's first message with the specified message.
-     */
+     *//*
+
     public void set_first_message (String p_message)
 
     {
@@ -143,9 +154,11 @@ public class PushBotTelemetry extends PushBotHardware
     //
     // set_error_message
     //
-    /**
+    */
+/**
      * Update the telemetry's first message to indicate an error.
-     */
+     *//*
+
     public void set_error_message (String p_message)
 
     {
@@ -154,3 +167,4 @@ public class PushBotTelemetry extends PushBotHardware
     } // set_error_message
 
 } // PushBotTelemetry
+*/

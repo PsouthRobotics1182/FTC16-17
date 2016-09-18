@@ -27,13 +27,15 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. *//*
+
 package com.qualcomm.ftcrobotcontroller.opmodes.Examples;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+*/
 /**
  * Example autonomous program.
  * <p>
@@ -43,7 +45,8 @@ import com.qualcomm.robotcore.hardware.Servo;
  * The public member variable 'time' is updated before each call to the run() event.
  * The method getRunTime() returns the time that has elapsed since the op mode
  * starting running to when the method was called.
- */
+ *//*
+
 public class K9AutoTime extends OpMode {
 
 	final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
@@ -59,28 +62,35 @@ public class K9AutoTime extends OpMode {
 	Servo arm;
 	LightSensor reflectedLight;
 
-	/**
+	*/
+/**
 	 * Constructor
-	 */
+	 *//*
+
 	public K9AutoTime() {
 
 	}
 
-	/*
+	*/
+/*
 	 * Code to run when the op mode is first enabled goes here
 	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
-	 */
+	 *//*
+
 	@Override
 	public void init() {
 
-		/*
+		*/
+/*
 		 * Use the hardwareMap to get the dc motors and servos by name.
 		 * Note that the names of the devices must match the names used
 		 * when you configured your robot and created the configuration file.
-		 */
+		 *//*
 
-		/*
+
+		*/
+/*
 		 * For the demo Tetrix K9 bot we assume the following,
 		 *   There are two motors "motor_1" and "motor_2"
 		 *   "motor_1" is on the right side of the bot.
@@ -89,7 +99,8 @@ public class K9AutoTime extends OpMode {
 		 * We also assume that there are two servos "servo_1" and "servo_6"
 		 *    "servo_1" controls the arm joint of the manipulator.
 		 *    "servo_6" controls the claw joint of the manipulator.
-		 */
+		 *//*
+
 		motorRight = hardwareMap.dcMotor.get("motor_2");
 		motorLeft = hardwareMap.dcMotor.get("motor_1");
 		motorLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -101,21 +112,25 @@ public class K9AutoTime extends OpMode {
 		armPosition = 0.4;
 		clawPosition = 0.25;
 
-		/*
+		*/
+/*
 		 * We also assume that we have a LEGO light sensor
 		 * with a name of "light_sensor" configured for our robot.
-		 */
+		 *//*
+
 		reflectedLight = hardwareMap.lightSensor.get("light_sensor");
 
         // turn on LED of light sensor.
         reflectedLight.enableLed(true);
 	}
 
-	/*
+	*/
+/*
 	 * This method will be called repeatedly in a loop
 	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
-	 */
+	 *//*
+
 	@Override
 	public void loop() {
 		double reflection = 0.0;
@@ -126,10 +141,12 @@ public class K9AutoTime extends OpMode {
 		claw.setPosition(clawPosition);
 
 
-        /*
+        */
+/*
          * Use the 'time' variable of this op mode to determine
          * how to adjust the motor power.
-         */
+         *//*
+
         if (this.time <= 1) {
             // from 0 to 1 seconds, run the motors for five seconds.
             left = 0.15;
@@ -152,23 +169,29 @@ public class K9AutoTime extends OpMode {
             right = 0.0;
         }
 
-		/*
+		*/
+/*
 		 * set the motor power
-		 */
+		 *//*
+
         motorRight.setPower(left);
         motorLeft.setPower(right);
 
-		/*
+		*/
+/*
 		 * read the light sensor.
-		 */
+		 *//*
+
 		//reflection = reflectedLight.getLightLevel();
 
-		/*
+		*/
+/*
 		 * Send telemetry data back to driver station. Note that if we are using
 		 * a legacy NXT-compatible motor controller, then the getPower() method
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
-		 */
+		 *//*
+
 
 		telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("time", "elapsed time: " + Double.toString(this.time));
@@ -177,14 +200,17 @@ public class K9AutoTime extends OpMode {
 		telemetry.addData("right tgt pwr", "right pwr: " + Double.toString(right));
 	}
 
-	/*
+	*/
+/*
 	 * Code to run when the op mode is first disabled goes here
 	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
-	 */
+	 *//*
+
 	@Override
 	public void stop() {
 
 	}
 
 }
+*/
