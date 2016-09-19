@@ -54,7 +54,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      *
      * If two or more op modes are registered with the same name, the app will display an error.
      */
-      manager.register("Autonomous Test", Autonomous.class);
-      manager.register("Stream Test", Streamtest.class);
+      manager.register("Autonomous Stream", Autonomous.class);
+      manager.register("Stream Stream", Streamtest.class);
   }
 }

@@ -19,16 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous
-public class Vuforia extends LinearOpMode {
+class Vuforia extends LinearOpMode {
 
 
-    String TAG = "Vuforia";
+    private final String TAG = "Vuforia";
+    private final String LICENSE_KEY = "AUgSTBn/////AAAAGSU/cD15/UsujI6xLYV74ziGgnCxnhNN3o+oqCbjOAYeuTL3onL+U3IeZxlEpkmbZUZo3dM9ASoSZmIJSdJD4qql7aQoGkyiMmQrG0VrtDRYXGfD0S2gkiP9zyr+Cq+j0OFfrefZrq+k+29VF6ON1KOoPJdDVfUvfbj96xmLd9E6p3bGoJUQSbgnGu+ZkMK2+0Qu8tFe6v8Wx+0v3amf6kgOAaLbjdGqAygEwk9pEOWFxIjpUcwZj8qNqZvtRJP+7csocK3MYC+stHvVh42xXaXeShzC737bkSj0G4lWCtI3JNFDw6NRKX0dmwLbIVMizvudFRXwF2SahUpwh+h/2T5WWSfWP3lcrDYQRgJ54PWG";
     //stores Vuforia instance
-    VuforiaLocalizer vuforia;
-
-    final String LICENSE_KEY = "AUgSTBn/////AAAAGSU/cD15/UsujI6xLYV74ziGgnCxnhNN3o+oqCbjOAYeuTL3onL+U3IeZxlEpkmbZUZo3dM9ASoSZmIJSdJD4qql7aQoGkyiMmQrG0VrtDRYXGfD0S2gkiP9zyr+Cq+j0OFfrefZrq+k+29VF6ON1KOoPJdDVfUvfbj96xmLd9E6p3bGoJUQSbgnGu+ZkMK2+0Qu8tFe6v8Wx+0v3amf6kgOAaLbjdGqAygEwk9pEOWFxIjpUcwZj8qNqZvtRJP+7csocK3MYC+stHvVh42xXaXeShzC737bkSj0G4lWCtI3JNFDw6NRKX0dmwLbIVMizvudFRXwF2SahUpwh+h/2T5WWSfWP3lcrDYQRgJ54PWG";
-
-    OpenGLMatrix lastPostition;
+    private VuforiaLocalizer vuforia;
+    private OpenGLMatrix lastPostition;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -131,7 +129,8 @@ public class Vuforia extends LinearOpMode {
             for (VuforiaTrackable trackable : allTrackables) {
                 telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
                 //prints out position of trackable... hopefully
-                //telemetry.addData(trackable.getName(), format(((VuforiaTrackableDefaultListener)trackable.getListener()).getPose()));
+                //TODO might break it so if there is error check ehre
+                telemetry.addData(trackable.getName(), format(((VuforiaTrackableDefaultListener)trackable.getListener()).getLastTrackedRawPose()));
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null)
                     lastPostition = robotLocationTransform;
@@ -147,7 +146,7 @@ public class Vuforia extends LinearOpMode {
     }
 
     //small method to extract position information from a transformation matrix
-    String format(OpenGLMatrix matrix) {
+    private String format(OpenGLMatrix matrix) {
         return matrix.formatAsTransform();
     }
 }

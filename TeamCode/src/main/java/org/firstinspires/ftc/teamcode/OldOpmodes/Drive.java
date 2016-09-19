@@ -352,7 +352,7 @@ public class Drive extends LinearOpMode {
 
     //TODO see if this works if so make a teleop using encoders
     public void driveE(int inches) throws InterruptedException {
-        DbgLog.msg("-------------------Encoder Drive Test---------------");
+        DbgLog.msg("-------------------Encoder Drive Stream---------------");
         mapHardware();
         //reversing motors as needed
         setDirection("FORWARD");
