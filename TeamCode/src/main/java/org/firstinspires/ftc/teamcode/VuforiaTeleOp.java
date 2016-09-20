@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -18,8 +18,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous
-class Vuforia extends LinearOpMode {
+@TeleOp
+class VuforiaTeleOp extends OpMode {
 
 
     private final String TAG = "Vuforia";
@@ -28,8 +28,11 @@ class Vuforia extends LinearOpMode {
     private VuforiaLocalizer vuforia;
     private OpenGLMatrix lastPostition;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
+    List<VuforiaTrackable> allTrackables;
+
+    VuforiaTrackables parts;
+
+    public void init() {
 
         //setup vuforia parameters
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -38,7 +41,7 @@ class Vuforia extends LinearOpMode {
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         //add trackable objects to vuforia instance from assets folder
-        VuforiaTrackables parts = this.vuforia.loadTrackablesFromAsset("FTC_2016-17");
+        parts = this.vuforia.loadTrackablesFromAsset("FTC_2016-17");
 
         VuforiaTrackable wheelsTarget = parts.get(0);
         wheelsTarget.setName("Wheels");
@@ -53,7 +56,7 @@ class Vuforia extends LinearOpMode {
         gearsTarget.setName("Gears");
 
         //add all trackables in a list for convenience
-        List<VuforiaTrackable> allTrackables = new ArrayList<>();
+        allTrackables = new ArrayList<>();
         allTrackables.addAll(parts);
 
         float botWidth = (float) 457.2;
@@ -118,38 +121,69 @@ class Vuforia extends LinearOpMode {
         ((VuforiaTrackableDefaultListener) gearsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
 
         telemetry.addData("Vuforia", " Setup is Complete");
-        telemetry.update();
-        waitForStart();
+    }
+    public void start() {
 
         //begin tracking the images
         parts.activate();
-
-        while (opModeIsActive()) {
-
-            for (VuforiaTrackable trackable : allTrackables) {
-                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
-                //prints out position of trackable... hopefully
-                //TODO might break it so if there is error check here
-
-                try {
-                    telemetry.addData(trackable.getName() + " Location", ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose());
-                } catch (Exception e){
-                    telemetry.addData(trackable.getName(), "Not Visible");
-                }
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                if (robotLocationTransform != null)
-                    lastPostition = robotLocationTransform;
-            }
-            if (lastPostition != null) {
-                telemetry.addData("Position", format(lastPostition));
-            } else {
-                telemetry.addData("Position", "Unknown");
-            }
-            telemetry.update();
-            idle();
-        }
     }
 
+    public void loop(){
+
+        for (VuforiaTrackable trackable : allTrackables) {
+            telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
+            //prints out position of trackable... hopefully
+            //TODO might break it so if there is error check here
+
+            /*try {
+                OpenGLMatrix trackablePose = ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose();
+                telemetry.addData(trackable.getName() + " Location", trackablePose);
+            } catch (Exception e){
+                telemetry.addData(trackable.getName() + " Location", "");
+            }*/
+            try {
+                //Puts thelocation of the trackable into a openGLmatrix
+                OpenGLMatrix trackablePose = ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose();
+                //matrix layout http://www.codinglabs.net/article_world_view_projection_matrix.aspx
+
+                //seperate out matrix into a array
+                //seperated based on the trig equations to solve for Z axis angle
+                float cosZ = trackablePose.get(0,0);
+                float sinZ = trackablePose.get(0,1);
+                float arcsinZ = trackablePose.get(1,0);
+                float arccosZ = trackablePose.get(1,1);
+
+                //solving the trig values
+                //they should all output the Z axis rotation, therefore all be equal
+                double zCos = Math.cos(cosZ);
+                double zSin = Math.sin(sinZ);
+                double zArcsin = Math.asin(arcsinZ);
+                double zArccos = Math.acos(arccosZ);
+
+
+                //matrix layout http://www.codinglabs.net/article_world_view_projection_matrix.aspx
+
+                //outputing all calculated values to check for continiuity therefore verifying math
+                //TODO verify and consolidate to average and output a single numebr
+                telemetry.addData(trackable.getName() + " Rotation Z", zCos);
+                telemetry.addData(trackable.getName() + " Rotation Z", zSin);
+                telemetry.addData(trackable.getName() + " Rotation Z", zArcsin);
+                telemetry.addData(trackable.getName() + " Rotation Z", zArccos);
+
+            } catch (Exception e){
+                telemetry.addData(trackable.getName() + " Location", " Unknown");
+            }
+            OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+            if (robotLocationTransform != null)
+                lastPostition = robotLocationTransform;
+        }
+        if (lastPostition != null) {
+            //telemetry.addData("Position", format(lastPostition));
+        } else {
+            //telemetry.addData("Position", "Unknown");
+        }
+        telemetry.update();
+    }
     //small method to extract position information from a transformation matrix
     private String format(OpenGLMatrix matrix) {
         return matrix.formatAsTransform();
