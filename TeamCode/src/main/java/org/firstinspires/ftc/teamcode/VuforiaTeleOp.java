@@ -37,8 +37,11 @@ class VuforiaTeleOp extends OpMode {
     DcMotor rightMotor;
 
     public void init() {
-        leftMotor = hardwareMap.dcMotor.get("leftM");
-        rightMotor = hardwareMap.dcMotor.get("rightM");
+        //leftMotor = hardwareMap.dcMotor.get("leftM");
+        //rightMotor = hardwareMap.dcMotor.get("rightM");
+
+        leftMotor = null;
+        rightMotor = null;
 
         //setup vuforia parameters
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -138,8 +141,8 @@ class VuforiaTeleOp extends OpMode {
         double leftPower = -gamepad1.left_stick_y;
         double rightPower = -gamepad1.right_stick_y;
 
-        leftMotor.setPower(leftPower);
-        rightMotor.setPower(rightPower);
+        //leftMotor.setPower(leftPower);
+        //rightMotor.setPower(rightPower);
 
         for (VuforiaTrackable trackable : allTrackables) {
             telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
