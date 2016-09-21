@@ -130,7 +130,7 @@ class Vuforia extends LinearOpMode {
                 telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
                 //prints out position of trackable... hopefully
                 //TODO might break it so if there is error check ehre
-                telemetry.addData(trackable.getName(), format(((VuforiaTrackableDefaultListener)trackable.getListener()).getLastTrackedRawPose()));
+                //telemetry.addData(trackable.getName(), format(((VuforiaTrackableDefaultListener)trackable.getListener()).getLastTrackedRawPose()));
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null)
                     lastPostition = robotLocationTransform;
@@ -140,6 +140,7 @@ class Vuforia extends LinearOpMode {
             } else {
                 telemetry.addData("Position", "Unknown");
             }
+
             telemetry.update();
             idle();
         }
