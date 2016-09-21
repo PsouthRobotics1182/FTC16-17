@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -22,17 +23,22 @@ import java.util.List;
 class VuforiaTeleOp extends OpMode {
 
 
-    private final String TAG = "Vuforia";
-    private final String LICENSE_KEY = "AUgSTBn/////AAAAGSU/cD15/UsujI6xLYV74ziGgnCxnhNN3o+oqCbjOAYeuTL3onL+U3IeZxlEpkmbZUZo3dM9ASoSZmIJSdJD4qql7aQoGkyiMmQrG0VrtDRYXGfD0S2gkiP9zyr+Cq+j0OFfrefZrq+k+29VF6ON1KOoPJdDVfUvfbj96xmLd9E6p3bGoJUQSbgnGu+ZkMK2+0Qu8tFe6v8Wx+0v3amf6kgOAaLbjdGqAygEwk9pEOWFxIjpUcwZj8qNqZvtRJP+7csocK3MYC+stHvVh42xXaXeShzC737bkSj0G4lWCtI3JNFDw6NRKX0dmwLbIVMizvudFRXwF2SahUpwh+h/2T5WWSfWP3lcrDYQRgJ54PWG";
+    final String TAG = "Vuforia";
+    final String LICENSE_KEY = "AUgSTBn/////AAAAGSU/cD15/UsujI6xLYV74ziGgnCxnhNN3o+oqCbjOAYeuTL3onL+U3IeZxlEpkmbZUZo3dM9ASoSZmIJSdJD4qql7aQoGkyiMmQrG0VrtDRYXGfD0S2gkiP9zyr+Cq+j0OFfrefZrq+k+29VF6ON1KOoPJdDVfUvfbj96xmLd9E6p3bGoJUQSbgnGu+ZkMK2+0Qu8tFe6v8Wx+0v3amf6kgOAaLbjdGqAygEwk9pEOWFxIjpUcwZj8qNqZvtRJP+7csocK3MYC+stHvVh42xXaXeShzC737bkSj0G4lWCtI3JNFDw6NRKX0dmwLbIVMizvudFRXwF2SahUpwh+h/2T5WWSfWP3lcrDYQRgJ54PWG";
     //stores Vuforia instance
-    private VuforiaLocalizer vuforia;
+    VuforiaLocalizer vuforia;
     private OpenGLMatrix lastPostition;
 
     List<VuforiaTrackable> allTrackables;
 
     VuforiaTrackables parts;
 
+    DcMotor leftMotor;
+    DcMotor rightMotor;
+
     public void init() {
+        leftMotor = hardwareMap.dcMotor.get("leftM");
+        rightMotor = hardwareMap.dcMotor.get("rightM");
 
         //setup vuforia parameters
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -106,9 +112,10 @@ class VuforiaTeleOp extends OpMode {
 
 
         //make a another transformation matrix to describe where phone in on robot
+        //this puts it portait on the right middle of the robot, 9cm above ground
         OpenGLMatrix phoneLocationObBot = OpenGLMatrix
                 //TODO measure these values for testing and reenter
-                .translation(botWidth / 2, 0, 9)
+                .translation(botWidth / 2, 0, 90)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.YZY,
                         AngleUnit.DEGREES, 0, 0, 0));
@@ -123,53 +130,35 @@ class VuforiaTeleOp extends OpMode {
         telemetry.addData("Vuforia", " Setup is Complete");
     }
     public void start() {
-
         //begin tracking the images
         parts.activate();
     }
 
     public void loop(){
+        double leftPower = -gamepad1.left_stick_y;
+        double rightPower = -gamepad1.right_stick_y;
+
+        leftMotor.setPower(leftPower);
+        rightMotor.setPower(rightPower);
 
         for (VuforiaTrackable trackable : allTrackables) {
             telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
             //prints out position of trackable... hopefully
             //TODO might break it so if there is error check here
 
-            /*try {
-                OpenGLMatrix trackablePose = ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose();
-                telemetry.addData(trackable.getName() + " Location", trackablePose);
-            } catch (Exception e){
-                telemetry.addData(trackable.getName() + " Location", "");
-            }*/
             try {
                 //Puts thelocation of the trackable into a openGLmatrix
                 OpenGLMatrix trackablePose = ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose();
                 //matrix layout http://www.codinglabs.net/article_world_view_projection_matrix.aspx
-
-                //seperate out matrix into a array
-                //seperated based on the trig equations to solve for Z axis angle
-                float cosZ = trackablePose.get(0,0);
-                float sinZ = trackablePose.get(0,1);
-                float arcsinZ = trackablePose.get(1,0);
-                float arccosZ = trackablePose.get(1,1);
-
-                //solving the trig values
-                //they should all output the Z axis rotation, therefore all be equal
-                double zCos = Math.cos(cosZ);
-                double zSin = Math.sin(sinZ);
-                double zArcsin = Math.asin(arcsinZ);
-                double zArccos = Math.acos(arccosZ);
-
+                //{1,5,9,13}
+                //{2,6,10,14}
+                //{3,7,11,15}
+                //{4,8,12,16}
 
                 //matrix layout http://www.codinglabs.net/article_world_view_projection_matrix.aspx
 
-                //outputing all calculated values to check for continiuity therefore verifying math
-                //TODO verify and consolidate to average and output a single numebr
-                telemetry.addData(trackable.getName() + " Rotation Z", zCos);
-                telemetry.addData(trackable.getName() + " Rotation Z", zSin);
-                telemetry.addData(trackable.getName() + " Rotation Z", zArcsin);
-                telemetry.addData(trackable.getName() + " Rotation Z", zArccos);
-
+                String readableLocation = format(trackablePose);
+                telemetry.addData(trackable.getName() + " Location", readableLocation);
             } catch (Exception e){
                 telemetry.addData(trackable.getName() + " Location", " Unknown");
             }
@@ -178,9 +167,10 @@ class VuforiaTeleOp extends OpMode {
                 lastPostition = robotLocationTransform;
         }
         if (lastPostition != null) {
-            //telemetry.addData("Position", format(lastPostition));
+            String lastLocation = format(lastPostition);
+            telemetry.addData("Position", lastLocation);
         } else {
-            //telemetry.addData("Position", "Unknown");
+            telemetry.addData("Position", "Unknown");
         }
         telemetry.update();
     }
