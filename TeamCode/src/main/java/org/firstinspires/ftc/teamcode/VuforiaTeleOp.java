@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @TeleOp
@@ -118,10 +119,10 @@ class VuforiaTeleOp extends OpMode {
         //this puts it portait on the right middle of the robot, 9cm above ground
         OpenGLMatrix phoneLocationObBot = OpenGLMatrix
                 //TODO measure these values for testing and reenter
-                .translation(botWidth / 2, 0, 90)
+                .translation(0, botWidth, 90)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.YZY,
-                        AngleUnit.DEGREES, 0, 0, 0));
+                        AngleUnit.DEGREES, 0, 0, -90));
         RobotLog.ii(TAG, "phone=%s", format(phoneLocationObBot));
 
         //add trackable listeners
@@ -161,7 +162,13 @@ class VuforiaTeleOp extends OpMode {
                 //matrix layout http://www.codinglabs.net/article_world_view_projection_matrix.aspx
 
                 String readableLocation = format(trackablePose);
-                telemetry.addData(trackable.getName() + " Location", readableLocation);
+                String[] locationList = readableLocation.split("\\{");
+                String[] cords = locationList[2].split(" ");
+
+                telemetry.addData(trackable.getName() + " Location X", cords[0]);
+                telemetry.addData(trackable.getName() + " Location Y", cords[1]);
+                telemetry.addData(trackable.getName() + " Location Z", cords[2]);
+
             } catch (Exception e){
                 telemetry.addData(trackable.getName() + " Location", " Unknown");
             }
