@@ -22,14 +22,19 @@ import java.util.List;
 class Vuforia extends LinearOpMode {
 
 
-    private final String TAG = "Vuforia";
-    private final String LICENSE_KEY = "AUgSTBn/////AAAAGSU/cD15/UsujI6xLYV74ziGgnCxnhNN3o+oqCbjOAYeuTL3onL+U3IeZxlEpkmbZUZo3dM9ASoSZmIJSdJD4qql7aQoGkyiMmQrG0VrtDRYXGfD0S2gkiP9zyr+Cq+j0OFfrefZrq+k+29VF6ON1KOoPJdDVfUvfbj96xmLd9E6p3bGoJUQSbgnGu+ZkMK2+0Qu8tFe6v8Wx+0v3amf6kgOAaLbjdGqAygEwk9pEOWFxIjpUcwZj8qNqZvtRJP+7csocK3MYC+stHvVh42xXaXeShzC737bkSj0G4lWCtI3JNFDw6NRKX0dmwLbIVMizvudFRXwF2SahUpwh+h/2T5WWSfWP3lcrDYQRgJ54PWG";
+    final String TAG = "Vuforia";
+    final String LICENSE_KEY = "AUgSTBn/////AAAAGSU/cD15/UsujI6xLYV74ziGgnCxnhNN3o+oqCbjOAYeuTL3onL+U3IeZxlEpkmbZUZo3dM9ASoSZmIJSdJD4qql7aQoGkyiMmQrG0VrtDRYXGfD0S2gkiP9zyr+Cq+j0OFfrefZrq+k+29VF6ON1KOoPJdDVfUvfbj96xmLd9E6p3bGoJUQSbgnGu+ZkMK2+0Qu8tFe6v8Wx+0v3amf6kgOAaLbjdGqAygEwk9pEOWFxIjpUcwZj8qNqZvtRJP+7csocK3MYC+stHvVh42xXaXeShzC737bkSj0G4lWCtI3JNFDw6NRKX0dmwLbIVMizvudFRXwF2SahUpwh+h/2T5WWSfWP3lcrDYQRgJ54PWG";
     //stores Vuforia instance
-    private VuforiaLocalizer vuforia;
+    VuforiaLocalizer vuforia;
     private OpenGLMatrix lastPostition;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
+    List<VuforiaTrackable> allTrackables;
+
+    VuforiaTrackables parts;
+
+    //TODO measure how far the beacon hangs over the wall and replace this value
+    int beaconOverhang = 50;
+    public void runOpMode() throws InterruptedException{
 
         //setup vuforia parameters
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -38,7 +43,7 @@ class Vuforia extends LinearOpMode {
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         //add trackable objects to vuforia instance from assets folder
-        VuforiaTrackables parts = this.vuforia.loadTrackablesFromAsset("FTC_2016-17");
+        parts = this.vuforia.loadTrackablesFromAsset("FTC_2016-17");
 
         VuforiaTrackable wheelsTarget = parts.get(0);
         wheelsTarget.setName("Wheels");
@@ -53,7 +58,7 @@ class Vuforia extends LinearOpMode {
         gearsTarget.setName("Gears");
 
         //add all trackables in a list for convenience
-        List<VuforiaTrackable> allTrackables = new ArrayList<>();
+        allTrackables = new ArrayList<>();
         allTrackables.addAll(parts);
 
         float botWidth = (float) 457.2;
@@ -103,12 +108,13 @@ class Vuforia extends LinearOpMode {
 
 
         //make a another transformation matrix to describe where phone in on robot
+        //this puts it portait on the right middle of the robot, 9cm above ground
         OpenGLMatrix phoneLocationObBot = OpenGLMatrix
                 //TODO measure these values for testing and reenter
-                .translation(botWidth / 2, 0, 9)
+                .translation(0, botWidth, 90)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.YZY,
-                        AngleUnit.DEGREES, 0, 0, 0));
+                        AngleUnit.DEGREES, 0, 0, -90));
         RobotLog.ii(TAG, "phone=%s", format(phoneLocationObBot));
 
         //add trackable listeners
@@ -118,9 +124,8 @@ class Vuforia extends LinearOpMode {
         ((VuforiaTrackableDefaultListener) gearsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
 
         telemetry.addData("Vuforia", " Setup is Complete");
-        telemetry.update();
-        waitForStart();
 
+        waitForStart();
         //begin tracking the images
         parts.activate();
 
@@ -132,24 +137,50 @@ class Vuforia extends LinearOpMode {
                 //TODO might break it so if there is error check here
 
                 try {
-                    telemetry.addData(trackable.getName() + " Location", ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose());
-                } catch (Exception e){
-                    telemetry.addData(trackable.getName(), "Not Visible");
+                    //Puts thelocation of the trackable into a openGLmatrix
+                    OpenGLMatrix trackablePose = ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose();
+                    //matrix layout http://www.codinglabs.net/article_world_view_projection_matrix.aspx
+                    //{1,5,9,13}
+                    //{2,6,10,14}
+                    //{3,7,11,15}
+                    //{4,8,12,16}
+
+                    //matrix layout http://www.codinglabs.net/article_world_view_projection_matrix.aspx
+
+                    //parses out the cordinates of the robot from the transformation matrix
+                    String readableLocation = format(trackablePose);
+                    String[] locationList = readableLocation.split("\\{");
+                    String[] cords = locationList[2].split(" ");
+                    int cordX = Integer.parseInt(cords[0]);
+                    int cordY = Integer.parseInt(cords[1]);
+                    //logic to get robot to button
+                    if (cordY == 0) {
+                        while (cordX > beaconOverhang) {
+                            //TODO meke the wheel drive object
+                            wheels.driveTime(0.5, 100, "FORWARD");
+                        }
+                    }
+
+                    telemetry.addData(trackable.getName() + " Location X", cords[0]);
+                    telemetry.addData(trackable.getName() + " Location Y", cords[1]);
+                    telemetry.addData(trackable.getName() + " Location Z", cords[2]);
+
+                } catch (Exception e) {
+                    telemetry.addData(trackable.getName() + " Location", " Unknown");
                 }
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null)
                     lastPostition = robotLocationTransform;
             }
             if (lastPostition != null) {
-                telemetry.addData("Position", format(lastPostition));
+                String lastLocation = format(lastPostition);
+                telemetry.addData("Position", lastLocation);
             } else {
                 telemetry.addData("Position", "Unknown");
             }
             telemetry.update();
-            idle();
         }
     }
-
     //small method to extract position information from a transformation matrix
     private String format(OpenGLMatrix matrix) {
         return matrix.formatAsTransform();

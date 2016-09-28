@@ -72,6 +72,24 @@ public class DriveSystem extends LinearOpMode {
             motor.setPower(0);
         }
     }
+    public void turnTime(double power, int duration, String direction) throws InterruptedException{
+
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setDirection("FORWARD");
+        if(direction.equals("LEFT")) {
+            leftMotor.setPower(power - 0.2);
+            rightMotor.setPower(power);
+        }
+        if(direction.equals("RIGHT")) {
+            leftMotor.setPower(power);
+            rightMotor.setPower(power - 0.2);
+        }
+        sleep(duration);
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+
+    }
     public void driveDistance(double power, int duration, String direction) {
         //// TODO: 9/17/2016  make this method for autoomous library
     }
