@@ -154,10 +154,10 @@ class Vuforia extends LinearOpMode {
                     int cordX = Integer.parseInt(cords[0]);
                     int cordY = Integer.parseInt(cords[1]);
                     //logic to get robot to button
-                    if (cordY == 0) {
+                    if (cordY == 0){
                         while (cordX > beaconOverhang) {
-                            //TODO meke the wheel drive object
-                            wheels.driveTime(0.5, 100, "FORWARD");
+                            //TODO make the wheel drive object
+                            //wheels.driveTime(0.5, 100, "FORWARD");
                         }
                     }
 
