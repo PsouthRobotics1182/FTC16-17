@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OldOpmodes;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -14,7 +14,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,9 +154,9 @@ class Vuforia extends LinearOpMode {
                     int cordX = Integer.parseInt(cords[0]);
                     int cordY = Integer.parseInt(cords[1]);
                     //logic to get robot to button
-                    if (cordY == 0) {
+                    if (cordY == 0){
                         while (cordX > beaconOverhang) {
-                            //TODO meke the wheel drive object
+                            //TODO make the wheel drive object
                             //wheels.driveTime(0.5, 100, "FORWARD");
                         }
                     }

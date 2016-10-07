@@ -38,11 +38,17 @@ public class AutonomousTest extends LinearOpMode {
         // can be brake or float
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        
-        waitForStart();
+
+
         //resets encoders when you press start
         leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        
+        waitForStart();
 
         //encoder tick value to reach controlled by PID
         leftMotor.setTargetPosition(4000);

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/*
  * Created by dzogh_000 on 9/17/2016.
  */
 public class DriveSystem extends LinearOpMode {
@@ -19,15 +19,14 @@ public class DriveSystem extends LinearOpMode {
     public void runOpMode(){}
 
     DcMotor leftMotor;
-    DcMotor leftFMotor;
     DcMotor rightMotor;
-    DcMotor rightFMotor;
+
+    DcMotor[] motors = new DcMotor[2];
 
     //variables to run motors using encoders
     int ticksPerRevolution = 1440;
     int maxRPM = 152;
     int maxTicksPerSecond = maxRPM * ticksPerRevolution;
-    List<DcMotor> motors = new ArrayList<>();
 
     int wheelcount;
     DcMotor.RunMode runMode;
@@ -40,27 +39,20 @@ public class DriveSystem extends LinearOpMode {
         this.leftDirection = leftDirection;
         this.rightDirection = leftDirection;
 
-        if(wheelcount == 2){
-
-            leftMotor = hardwareMap.dcMotor.get("leftM");
-            rightMotor = hardwareMap.dcMotor.get("rightM");
+        leftMotor = hardwareMap.dcMotor.get("leftM");
+        rightMotor = hardwareMap.dcMotor.get("rightM");
 
 
-            motors.add(leftMotor);
-            motors.add(rightMotor);
-            if (wheelcount == 4){
-                motors.add(leftFMotor);
-                motors.add(rightFMotor);
-            }
+        motors[0] = leftMotor;
+        motors[1] = rightMotor;
 
-            for (DcMotor motor : motors){
-                motor.setMode(runMode);
-                motor.setMaxSpeed(maxTicksPerSecond);
-                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        for (DcMotor motor : motors){
+            motor.setMode(runMode);
+            motor.setMaxSpeed(maxTicksPerSecond);
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-            }
-            setDirection("FORWARD");
         }
+        setDirection("FORWARD");
 
     }
     public void driveTime(double power, int duration, String direction) throws InterruptedException{
@@ -72,24 +64,6 @@ public class DriveSystem extends LinearOpMode {
             motor.setPower(0);
         }
     }
-    public void turnTime(double power, int duration, String direction) throws InterruptedException{
-
-        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        setDirection("FORWARD");
-        if(direction.equals("LEFT")) {
-            leftMotor.setPower(power - 0.2);
-            rightMotor.setPower(power);
-        }
-        if(direction.equals("RIGHT")) {
-            leftMotor.setPower(power);
-            rightMotor.setPower(power - 0.2);
-        }
-        sleep(duration);
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
-
-    }
     public void driveDistance(double power, int duration, String direction) {
         //// TODO: 9/17/2016  make this method for autoomous library
     }
@@ -99,26 +73,18 @@ public class DriveSystem extends LinearOpMode {
         // // TODO: 9/17/2016 find proper motor directions
         if (direction.equals("FORWARD")){
             leftMotor.setDirection(leftDirection);
-            leftFMotor.setDirection(leftDirection);
-            rightMotor.setDirection(rightDirection);
             rightMotor.setDirection(rightDirection);
         }
         if (direction.equals("REVERSE")){
             leftMotor.setDirection(rightDirection);
-            leftFMotor.setDirection(rightDirection);
-            rightMotor.setDirection(leftDirection);
             rightMotor.setDirection(leftDirection);
         }
         if (direction.equals("PIVOT_RIGHT")){
             leftMotor.setDirection(leftDirection);
-            leftFMotor.setDirection(leftDirection);
-            rightMotor.setDirection(leftDirection);
             rightMotor.setDirection(leftDirection);
         }
         if (direction.equals("PIVOT_LEFT")){
             leftMotor.setDirection(rightDirection);
-            leftFMotor.setDirection(rightDirection);
-            rightMotor.setDirection(rightDirection);
             rightMotor.setDirection(rightDirection);
         }
     }

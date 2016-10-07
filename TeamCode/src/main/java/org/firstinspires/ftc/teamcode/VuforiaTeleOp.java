@@ -38,11 +38,11 @@ class VuforiaTeleOp extends OpMode {
     DcMotor rightMotor;
 
     public void init() {
-        //leftMotor = hardwareMap.dcMotor.get("leftM");
-        //rightMotor = hardwareMap.dcMotor.get("rightM");
+        leftMotor = hardwareMap.dcMotor.get("leftM");
+        rightMotor = hardwareMap.dcMotor.get("rightM");
 
-        leftMotor = null;
-        rightMotor = null;
+        //leftMotor = null;
+        //rightMotor = null;
 
         //setup vuforia parameters
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -69,8 +69,9 @@ class VuforiaTeleOp extends OpMode {
         allTrackables = new ArrayList<>();
         allTrackables.addAll(parts);
 
+        //unit is mm
         float botWidth = (float) 457.2;
-        float feildWidth = 3580;
+        float feildWidth = 3658;
 
         /*to locate the robot based on the location of the trackable
         we must tell vuforia where the trackables are on the feild
@@ -78,7 +79,7 @@ class VuforiaTeleOp extends OpMode {
 
         //place the wheels on the wall.
         OpenGLMatrix wheelsTargetLocation = OpenGLMatrix
-                .translation(305, feildWidth / 2, 6)
+                .translation(305, feildWidth / 2, 12)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -88,7 +89,7 @@ class VuforiaTeleOp extends OpMode {
 
         //place the tools on the wall
         OpenGLMatrix toolsTargetLocation = OpenGLMatrix
-                .translation(-feildWidth / 2, -762, 6)
+                .translation(-feildWidth / 2, -762, 12)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XYX,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -97,7 +98,7 @@ class VuforiaTeleOp extends OpMode {
 
         //place the legos on the wall
         OpenGLMatrix legosTargetLocation = OpenGLMatrix
-                .translation(-762, feildWidth / 2, 6)
+                .translation(-762, feildWidth / 2, 12)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -107,7 +108,7 @@ class VuforiaTeleOp extends OpMode {
 
         //place the gears on the wall
         OpenGLMatrix gearsTargetLocation = OpenGLMatrix
-                .translation(-feildWidth / 2, -305, 6)
+                .translation(-feildWidth / 2, -305, 12)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -142,8 +143,8 @@ class VuforiaTeleOp extends OpMode {
         double leftPower = -gamepad1.left_stick_y;
         double rightPower = -gamepad1.right_stick_y;
 
-        //leftMotor.setPower(leftPower);
-        //rightMotor.setPower(rightPower);
+        leftMotor.setPower(leftPower);
+        rightMotor.setPower(rightPower);
 
         for (VuforiaTrackable trackable : allTrackables) {
             telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
@@ -164,7 +165,7 @@ class VuforiaTeleOp extends OpMode {
                 String readableLocation = format(trackablePose);
                 String[] locationList = readableLocation.split("\\{");
                 String[] cords = locationList[2].split(" ");
-
+                telemetry.addData(trackable.getName() + " Matrix", format(trackablePose));
                 telemetry.addData(trackable.getName() + " Location X", cords[0]);
                 telemetry.addData(trackable.getName() + " Location Y", cords[1]);
                 telemetry.addData(trackable.getName() + " Location Z", cords[2]);
