@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@TeleOp
+@TeleOp(name = "Test", group = "TeleOp")
 class VuforiaTeleOp extends OpMode {
 
 
@@ -169,6 +169,9 @@ class VuforiaTeleOp extends OpMode {
                 telemetry.addData(trackable.getName() + " Location X", cords[0]);
                 telemetry.addData(trackable.getName() + " Location Y", cords[1]);
                 telemetry.addData(trackable.getName() + " Location Z", cords[2]);
+                telemetry.addData("Left Power: ", leftPower);
+                telemetry.addData("Right Power: ", rightPower);
+
 
             } catch (Exception e){
                 telemetry.addData(trackable.getName() + " Location", " Unknown");
