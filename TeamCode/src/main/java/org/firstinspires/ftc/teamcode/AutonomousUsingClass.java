@@ -11,10 +11,10 @@ public class AutonomousUsingClass extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException{
         wheels = new DriveSystem();
-        wheels.configureMotors(2, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.REVERSE);
+        /*wheels.configureMotors(2, DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
-        wheels.driveTime(1, 1000, "FORWARD");
+        wheels.driveTime(1, 1000, "FORWARD");*/
     }
 }

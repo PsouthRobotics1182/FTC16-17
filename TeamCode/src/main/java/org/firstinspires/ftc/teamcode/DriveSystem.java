@@ -28,16 +28,14 @@ public class DriveSystem extends LinearOpMode {
     int maxRPM = 152;
     int maxTicksPerSecond = maxRPM * ticksPerRevolution;
 
-    int wheelcount;
-    DcMotor.RunMode runMode;
+    DcMotor.RunMode runMode = DcMotor.RunMode.RUN_USING_ENCODER;
     DcMotorSimple.Direction rightDirection, leftDirection;
     public DriveSystem(){
 
     }
-    public void configureMotors(int wheelCount, DcMotorSimple.Direction leftDirection, DcMotorSimple.Direction rightDirection){
-        this.wheelcount = wheelCount;
+    public void configureMotors(DcMotorSimple.Direction leftDirection, DcMotorSimple.Direction rightDirection){
         this.leftDirection = leftDirection;
-        this.rightDirection = leftDirection;
+        this.rightDirection = rightDirection;
 
         leftMotor = hardwareMap.dcMotor.get("leftM");
         rightMotor = hardwareMap.dcMotor.get("rightM");
@@ -55,18 +53,10 @@ public class DriveSystem extends LinearOpMode {
         setDirection("FORWARD");
 
     }
-    public void driveTime(double power, int duration, String direction) throws InterruptedException{
-        for (DcMotor motor : motors){
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            setDirection(direction);
-            motor.setPower(power);
-            sleep(duration);
-            motor.setPower(0);
-        }
+    public void drive(double power, int duration, String direction) throws InterruptedException{
+        //todo
     }
-    public void driveDistance(double power, int duration, String direction) {
-        //// TODO: 9/17/2016  make this method for autoomous library
-    }
+
 
 
     private void setDirection(String direction){

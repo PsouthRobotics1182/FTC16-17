@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -37,9 +39,29 @@ class VuforiaTeleOp extends OpMode {
     DcMotor leftMotor;
     DcMotor rightMotor;
 
+    GyroSensor gyro;
+    int ticksPerRevolution = 1440;
+    int maxRPM = 152;
+    int maxTicksPerSecond = maxRPM * ticksPerRevolution;
+
     public void init() {
         leftMotor = hardwareMap.dcMotor.get("leftM");
         rightMotor = hardwareMap.dcMotor.get("rightM");
+        gyro = hardwareMap.gyroSensor.get("gyro");
+
+        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        leftMotor.setMaxSpeed(maxTicksPerSecond);
+        rightMotor.setMaxSpeed(maxTicksPerSecond);
+        // can be brake or float
+        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //leftMotor = null;
         //rightMotor = null;
@@ -137,17 +159,47 @@ class VuforiaTeleOp extends OpMode {
     public void start() {
         //begin tracking the images
         parts.activate();
+
+        //resets encoders when you press start
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void loop(){
         double leftPower = -gamepad1.left_stick_y;
         double rightPower = -gamepad1.right_stick_y;
-
+        if (leftPower > 0){
+            leftPower = leftPower * leftPower;
+        }else {
+            leftPower = leftPower * leftPower;
+            leftPower = -leftPower;
+        }
+        if (rightPower > 0){
+            rightPower = rightPower * rightPower;
+        }else {
+            rightPower = rightPower * rightPower;
+            rightPower = -rightPower;
+        }
         leftMotor.setPower(leftPower);
         rightMotor.setPower(rightPower);
 
+        if (gamepad1.a){
+            //resets encoders when you press start
+            leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+            leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            gyro.resetZAxisIntegrator();
+        }
         for (VuforiaTrackable trackable : allTrackables) {
-            telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
+            //telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
             //prints out position of trackable... hopefully
             //TODO might break it so if there is error check here
 
@@ -171,18 +223,23 @@ class VuforiaTeleOp extends OpMode {
                 telemetry.addData(trackable.getName() + " Location Z", cords[2]);
 
             } catch (Exception e){
-                telemetry.addData(trackable.getName() + " Location", " Unknown");
+                //telemetry.addData(trackable.getName() + " Location", " Unknown");
             }
             OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-            if (robotLocationTransform != null)
-                lastPostition = robotLocationTransform;
+            if (robotLocationTransform != null){}
+                //lastPostition = robotLocationTransform;
         }
         if (lastPostition != null) {
             String lastLocation = format(lastPostition);
-            telemetry.addData("Position", lastLocation);
+            //telemetry.addData("Position", lastLocation);
         } else {
-            telemetry.addData("Position", "Unknown");
+            //telemetry.addData("Position", "Unknown");
         }
+        double leftRotations = (double)leftMotor.getCurrentPosition() / (double) 1440;
+        double rightRotations = (double)rightMotor.getCurrentPosition() / (double) 1440;
+        telemetry.addData("Left Motor Position", leftRotations);
+        telemetry.addData("Right Motor Position", rightRotations);
+        telemetry.addData("Gyro Value", gyro.getHeading());
         telemetry.update();
     }
     //small method to extract position information from a transformation matrix

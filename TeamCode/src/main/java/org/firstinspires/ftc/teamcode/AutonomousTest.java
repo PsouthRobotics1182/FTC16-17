@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 //class to show new cqabilties
 
@@ -27,7 +28,7 @@ public class AutonomousTest extends LinearOpMode {
         rightMotor = hardwareMap.dcMotor.get("rightM");
         //set the motors run charictaristics
         //set direction
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         // or use runusingencoder to run by speed
         leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -47,6 +48,9 @@ public class AutonomousTest extends LinearOpMode {
 
         leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        telemetry.addData("Initialzation", "complete");
+        telemetry.update();
         
         waitForStart();
 
