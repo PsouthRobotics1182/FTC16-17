@@ -38,6 +38,8 @@ class VuforiaTeleOp extends OpMode {
 
     DcMotor leftMotor;
     DcMotor rightMotor;
+    DcMotor lift;
+    DcMotor sweep;
 
     GyroSensor gyro;
     int ticksPerRevolution = 1440;
@@ -46,8 +48,10 @@ class VuforiaTeleOp extends OpMode {
 
     public void init() {
         leftMotor = hardwareMap.dcMotor.get("leftM");
-        rightMotor = hardwareMap.dcMotor.get("rightM");
-        gyro = hardwareMap.gyroSensor.get("gyro");
+        rightMotor = hardwareMap.dcMotor.get("rightM");/*
+        gyro = hardwareMap.gyroSensor.get("gyro");*/
+
+        sweep = hardwareMap.dcMotor.get("sweep");
 
         rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -195,8 +199,8 @@ class VuforiaTeleOp extends OpMode {
 
             leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            gyro.resetZAxisIntegrator();
+/*
+            gyro.resetZAxisIntegrator();*/
         }
         for (VuforiaTrackable trackable : allTrackables) {
             //telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
@@ -237,6 +241,13 @@ class VuforiaTeleOp extends OpMode {
         }
         double leftRotations = (double)leftMotor.getCurrentPosition() / (double) 1440;
         double rightRotations = (double)rightMotor.getCurrentPosition() / (double) 1440;
+        if (gamepad2.y)
+            lift.setPower(0.5);
+        else
+            lift.setPower(0);
+        double sweepPower = gamepad2.left_stick_y;
+        sweep.setPower(sweepPower);
+
         telemetry.addData("Left Motor Position", leftRotations);
         telemetry.addData("Right Motor Position", rightRotations);
         telemetry.addData("Gyro Value", gyro.getHeading());

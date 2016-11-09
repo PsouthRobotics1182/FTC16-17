@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.VuforiaAutonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -18,14 +19,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.OldOpmodes.Streamtest;
+import org.firstinspires.ftc.teamcode.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-@TeleOp
-public class Vuforia extends LinearOpMode {
+@Autonomous(name = "Gears Autonomous")
+public class VuforiaGears extends LinearOpMode {
 
 
     final String TAG = "Vuforia";
@@ -167,7 +170,7 @@ public class Vuforia extends LinearOpMode {
         parts.activate();
 
         //resets encoders when you press start
-       // leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
@@ -178,28 +181,40 @@ public class Vuforia extends LinearOpMode {
         while (opModeIsActive()) {
 
             for (VuforiaTrackable trackable : allTrackables) {
-                /**
-                 * getUpdatedRobotLocation() will return null if no new information is available since
-                 * the last time that call was made, or if the trackable is not currently visible.
-                 * getRobotLocation() will return null if the trackable is not currently visible.
-                 */
-                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
-                trackablePose = ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose();
-                telemetry.addData(trackable.getName(), trackablePose);
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                if (robotLocationTransform != null) {
-                    lastLocation = robotLocationTransform;
+                if (trackable.getName().equals("Gears")) {
+                    /**
+                     * getUpdatedRobotLocation() will return null if no new information is available since
+                     * the last time that call was made, or if the trackable is not currently visible.
+                     * getRobotLocation() will return null if the trackable is not currently visible.
+                     */
+                    telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
+                    trackablePose = ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose();
+
                 }
             }
-            /**
-             * Provide feedback as to where the robot was last located (if we know).
-             */
-            if (lastLocation != null) {
-                //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
-                telemetry.addData("Pos", format(lastLocation));
+            if (trackablePose != null){
+                String location = format(trackablePose);
+                Scanner sc = new Scanner(location).useDelimiter(" ");
+                String partOne = sc.next();
+                String partTwo = sc.next();
+                String partThree =  sc.next();
+                String partFour =  sc.next();
+                String partFive =  sc.next();
+                String partSix =  sc.next();
+                double partSeven = sc.nextDouble();
+                Double partEight;
+                String eight = "";
+                eight = sc.next();
+                eight = eight.replace(eight.substring(eight.length()-1), "");
+                partEight = Double.parseDouble(eight);
+
+                telemetry.addData("Part Seven", partSeven);
+                telemetry.addData("Part Eight", partEight);
+
             } else {
-                telemetry.addData("Pos", "Unknown");
+                telemetry.addData("Position", "Unknown");
             }
+
             telemetry.update();
             idle();
         }
