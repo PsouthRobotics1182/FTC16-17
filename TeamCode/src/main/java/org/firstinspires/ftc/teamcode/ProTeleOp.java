@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 //class to show new cqabilties
 
 //register the class so it shows in app
-@TeleOp(name = "ProTeleOp", group = "TeleOp")
+//@TeleOp(name = "ProTeleOp", group = "TeleOp")
 //@Disabled //hides the class in the app menu
 public class ProTeleOp extends OpMode {
     //define what motors are going to be in use

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //import com.qualcomm.robotcore.hardware.DcMotor;
 //import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.RobotLog;
 
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.DriveSystem;
 import org.firstinspires.ftc.teamcode.OldOpmodes.Streamtest;
 import org.firstinspires.ftc.teamcode.R;
 
@@ -198,18 +200,36 @@ public class VuforiaGears extends LinearOpMode {
                 String partOne = sc.next();
                 String partTwo = sc.next();
                 String partThree =  sc.next();
+                int angleX = Integer.parseInt(partThree);
                 String partFour =  sc.next();
+                int angleY = Integer.parseInt(partFour);
                 String partFive =  sc.next();
+                partFive = partFive.replace(partFive.substring(partFive.length()-1), "");
+                int angleZ = Integer.parseInt(partFive);
                 String partSix =  sc.next();
                 double partSeven = sc.nextDouble();
-                Double partEight;
-                String eight = "";
-                eight = sc.next();
-                eight = eight.replace(eight.substring(eight.length()-1), "");
-                partEight = Double.parseDouble(eight);
-
-                telemetry.addData("Part Seven", partSeven);
-                telemetry.addData("Part Eight", partEight);
+                String partEight = sc.next();
+                double lengthY = Double.parseDouble(partEight);
+                partEight = partEight.replace(partEight.substring(partEight.length()-1), "");
+                double lengthZ = Double.parseDouble(partEight);
+                telemetry.addData("Angle X", angleX);
+                telemetry.addData("Angle Y", angleY);
+                telemetry.addData("Angle Z", angleZ);
+                telemetry.addData("Length Y", lengthY);
+                telemetry.addData("Length Z", lengthZ);
+                telemetry.update();
+                /*DriveSystem drive = new DriveSystem(DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.REVERSE);
+                //if the robot is to the left of the photo
+                if (angleZ < 0){
+                    //pivots so it is 90 to photo
+                    drive.pivot(angleZ);
+                    //drives so it is straight out fro picture
+                    drive.drive(0.8, lengthY);
+                    //pivots to face picture
+                    drive.pivot(90);
+                    //TODO
+                    //recheack lengthZ and drive that dist
+                }*/
 
             } else {
                 telemetry.addData("Position", "Unknown");

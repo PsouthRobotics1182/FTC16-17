@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@TeleOp
+//@TeleOp
 class VuforiaTeleOp extends OpMode {
 
 

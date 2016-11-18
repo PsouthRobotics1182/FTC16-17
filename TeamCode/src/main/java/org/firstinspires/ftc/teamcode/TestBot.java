@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.OldOpmodes.Drive;
 
 
-@TeleOp(name = "TestBot", group = "TeleOp")
+//@TeleOp(name = "TestBot", group = "TeleOp")
 public class TestBot extends OpMode {
     //drive motors
     DcMotor leftMotor;
