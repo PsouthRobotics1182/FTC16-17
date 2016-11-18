@@ -1,8 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.VuforiaAutonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
+//import com.qualcomm.robotcore.hardware.DcMotor;
+//import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -17,55 +20,59 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.DriveSystem;
+import org.firstinspires.ftc.teamcode.OldOpmodes.Streamtest;
+import org.firstinspires.ftc.teamcode.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
-//@TeleOp
-class VuforiaTeleOp extends OpMode {
+//@Autonomous(name = "Gears Autonomous")
+public class VuforiaGears extends LinearOpMode {
 
 
     final String TAG = "Vuforia";
     final String LICENSE_KEY = "AUgSTBn/////AAAAGSU/cD15/UsujI6xLYV74ziGgnCxnhNN3o+oqCbjOAYeuTL3onL+U3IeZxlEpkmbZUZo3dM9ASoSZmIJSdJD4qql7aQoGkyiMmQrG0VrtDRYXGfD0S2gkiP9zyr+Cq+j0OFfrefZrq+k+29VF6ON1KOoPJdDVfUvfbj96xmLd9E6p3bGoJUQSbgnGu+ZkMK2+0Qu8tFe6v8Wx+0v3amf6kgOAaLbjdGqAygEwk9pEOWFxIjpUcwZj8qNqZvtRJP+7csocK3MYC+stHvVh42xXaXeShzC737bkSj0G4lWCtI3JNFDw6NRKX0dmwLbIVMizvudFRXwF2SahUpwh+h/2T5WWSfWP3lcrDYQRgJ54PWG";
     //stores Vuforia instance
     VuforiaLocalizer vuforia;
-    private OpenGLMatrix lastPostition;
+    private OpenGLMatrix lastLocation;
+    OpenGLMatrix trackablePose;
 
     List<VuforiaTrackable> allTrackables;
 
     VuforiaTrackables parts;
 
-    DcMotor leftMotor;
-    DcMotor rightMotor;
-    DcMotor lift;
-    DcMotor sweep;
+    //DcMotor leftMotor;
+    //DcMotor rightMotor;
 
-    GyroSensor gyro;
+    //double cordZ;
+    //String[] cords = new String[3];
+
+    //GyroSensor gyro;
     int ticksPerRevolution = 1440;
     int maxRPM = 152;
     int maxTicksPerSecond = maxRPM * ticksPerRevolution;
 
-    public void init() {
-        leftMotor = hardwareMap.dcMotor.get("leftM");
-        rightMotor = hardwareMap.dcMotor.get("rightM");/*
-        gyro = hardwareMap.gyroSensor.get("gyro");*/
+    public void runOpMode() throws InterruptedException {
+        //leftMotor = hardwareMap.dcMotor.get("leftM");
+        //rightMotor = hardwareMap.dcMotor.get("rightM");
+        //gyro = hardwareMap.gyroSensor.get("gyro");
 
-        sweep = hardwareMap.dcMotor.get("sweep");
-
-        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        //rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
-        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        leftMotor.setMaxSpeed(maxTicksPerSecond);
-        rightMotor.setMaxSpeed(maxTicksPerSecond);
+        //leftMotor.setMaxSpeed(maxTicksPerSecond);
+        //rightMotor.setMaxSpeed(maxTicksPerSecond);
         // can be brake or float
-        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //leftMotor = null;
         //rightMotor = null;
@@ -159,102 +166,89 @@ class VuforiaTeleOp extends OpMode {
         ((VuforiaTrackableDefaultListener) gearsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
 
         telemetry.addData("Vuforia", " Setup is Complete");
-    }
-    public void start() {
+        telemetry.update();
+        waitForStart();
         //begin tracking the images
         parts.activate();
 
         //resets encoders when you press start
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
+        //leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-    public void loop(){
-        double leftPower = -gamepad1.left_stick_y;
-        double rightPower = -gamepad1.right_stick_y;
-        if (leftPower > 0){
-            leftPower = leftPower * leftPower;
-        }else {
-            leftPower = leftPower * leftPower;
-            leftPower = -leftPower;
-        }
-        if (rightPower > 0){
-            rightPower = rightPower * rightPower;
-        }else {
-            rightPower = rightPower * rightPower;
-            rightPower = -rightPower;
-        }
-        leftMotor.setPower(leftPower);
-        rightMotor.setPower(rightPower);
+        //gyro.resetZAxisIntegrator();
+        while (opModeIsActive()) {
 
-        if (gamepad1.a){
-            //resets encoders when you press start
-            leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            for (VuforiaTrackable trackable : allTrackables) {
+                if (trackable.getName().equals("Gears")) {
+                    /**
+                     * getUpdatedRobotLocation() will return null if no new information is available since
+                     * the last time that call was made, or if the trackable is not currently visible.
+                     * getRobotLocation() will return null if the trackable is not currently visible.
+                     */
+                    telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
+                    trackablePose = ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose();
 
-
-            leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-/*
-            gyro.resetZAxisIntegrator();*/
-        }
-        for (VuforiaTrackable trackable : allTrackables) {
-            //telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
-            //prints out position of trackable... hopefully
-            //TODO might break it so if there is error check here
-
-            try {
-                //Puts thelocation of the trackable into a openGLmatrix
-                OpenGLMatrix trackablePose = ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose();
-                //matrix layout http://www.codinglabs.net/article_world_view_projection_matrix.aspx
-                //{1,5,9,13}
-                //{2,6,10,14}
-                //{3,7,11,15}
-                //{4,8,12,16}
-
-                //matrix layout http://www.codinglabs.net/article_world_view_projection_matrix.aspx
-
-                String readableLocation = format(trackablePose);
-                String[] locationList = readableLocation.split("\\{");
-                String[] cords = locationList[2].split(" ");
-                telemetry.addData(trackable.getName() + " Matrix", format(trackablePose));
-                telemetry.addData(trackable.getName() + " Location X", cords[0]);
-                telemetry.addData(trackable.getName() + " Location Y", cords[1]);
-                telemetry.addData(trackable.getName() + " Location Z", cords[2]);
-
-            } catch (Exception e){
-                //telemetry.addData(trackable.getName() + " Location", " Unknown");
+                }
             }
-            OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-            if (robotLocationTransform != null){}
-                //lastPostition = robotLocationTransform;
-        }
-        if (lastPostition != null) {
-            String lastLocation = format(lastPostition);
-            //telemetry.addData("Position", lastLocation);
-        } else {
-            //telemetry.addData("Position", "Unknown");
-        }
-        double leftRotations = (double)leftMotor.getCurrentPosition() / (double) 1440;
-        double rightRotations = (double)rightMotor.getCurrentPosition() / (double) 1440;
-        if (gamepad2.y)
-            lift.setPower(0.5);
-        else
-            lift.setPower(0);
-        double sweepPower = gamepad2.left_stick_y;
-        sweep.setPower(sweepPower);
+            if (trackablePose != null){
+                String location = format(trackablePose);
+                Scanner sc = new Scanner(location).useDelimiter(" ");
+                String partOne = sc.next();
+                String partTwo = sc.next();
+                String partThree =  sc.next();
+                int angleX = Integer.parseInt(partThree);
+                String partFour =  sc.next();
+                int angleY = Integer.parseInt(partFour);
+                String partFive =  sc.next();
+                partFive = partFive.replace(partFive.substring(partFive.length()-1), "");
+                int angleZ = Integer.parseInt(partFive);
+                String partSix =  sc.next();
+                double partSeven = sc.nextDouble();
+                String partEight = sc.next();
+                double lengthY = Double.parseDouble(partEight);
+                partEight = partEight.replace(partEight.substring(partEight.length()-1), "");
+                double lengthZ = Double.parseDouble(partEight);
+                telemetry.addData("Angle X", angleX);
+                telemetry.addData("Angle Y", angleY);
+                telemetry.addData("Angle Z", angleZ);
+                telemetry.addData("Length Y", lengthY);
+                telemetry.addData("Length Z", lengthZ);
+                telemetry.update();
+                /*DriveSystem drive = new DriveSystem(DcMotorSimple.Direction.FORWARD, DcMotorSimple.Direction.REVERSE);
+                //if the robot is to the left of the photo
+                if (angleZ < 0){
+                    //pivots so it is 90 to photo
+                    drive.pivot(angleZ);
+                    //drives so it is straight out fro picture
+                    drive.drive(0.8, lengthY);
+                    //pivots to face picture
+                    drive.pivot(90);
+                    //TODO
+                    //recheack lengthZ and drive that dist
+                }*/
 
-        telemetry.addData("Left Motor Position", leftRotations);
-        telemetry.addData("Right Motor Position", rightRotations);
-        telemetry.addData("Gyro Value", gyro.getHeading());
-        telemetry.update();
+            } else {
+                telemetry.addData("Position", "Unknown");
+            }
+
+            telemetry.update();
+            idle();
+        }
+
     }
     //small method to extract position information from a transformation matrix
     private String format(OpenGLMatrix matrix) {
         return matrix.formatAsTransform();
+    }
+    private double ticksToMM(int ticks){
+        double revolutions = (double) ticks * ticksPerRevolution;
+
+        double circ = 3.24459259 * 101.6;
+        double mm = revolutions * circ;
+        return mm;
     }
 }

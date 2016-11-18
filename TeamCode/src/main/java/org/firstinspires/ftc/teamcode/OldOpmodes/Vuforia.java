@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+//import com.qualcomm.robotcore.hardware.DcMotor;
+//import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -16,25 +20,57 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
-@Autonomous
-class Vuforia extends LinearOpMode {
+//@TeleOp
+public class Vuforia extends LinearOpMode {
 
 
     final String TAG = "Vuforia";
     final String LICENSE_KEY = "AUgSTBn/////AAAAGSU/cD15/UsujI6xLYV74ziGgnCxnhNN3o+oqCbjOAYeuTL3onL+U3IeZxlEpkmbZUZo3dM9ASoSZmIJSdJD4qql7aQoGkyiMmQrG0VrtDRYXGfD0S2gkiP9zyr+Cq+j0OFfrefZrq+k+29VF6ON1KOoPJdDVfUvfbj96xmLd9E6p3bGoJUQSbgnGu+ZkMK2+0Qu8tFe6v8Wx+0v3amf6kgOAaLbjdGqAygEwk9pEOWFxIjpUcwZj8qNqZvtRJP+7csocK3MYC+stHvVh42xXaXeShzC737bkSj0G4lWCtI3JNFDw6NRKX0dmwLbIVMizvudFRXwF2SahUpwh+h/2T5WWSfWP3lcrDYQRgJ54PWG";
     //stores Vuforia instance
     VuforiaLocalizer vuforia;
-    private OpenGLMatrix lastPostition;
+    private OpenGLMatrix lastLocation;
+    OpenGLMatrix trackablePose;
 
     List<VuforiaTrackable> allTrackables;
 
     VuforiaTrackables parts;
 
-    //TODO measure how far the beacon hangs over the wall and replace this value
-    int beaconOverhang = 50;
-    public void runOpMode() throws InterruptedException{
+    //DcMotor leftMotor;
+    //DcMotor rightMotor;
+
+    //double cordZ;
+    //String[] cords = new String[3];
+
+    //GyroSensor gyro;
+    int ticksPerRevolution = 1440;
+    int maxRPM = 152;
+    int maxTicksPerSecond = maxRPM * ticksPerRevolution;
+
+    public void runOpMode() throws InterruptedException {
+        //leftMotor = hardwareMap.dcMotor.get("leftM");
+        //rightMotor = hardwareMap.dcMotor.get("rightM");
+        //gyro = hardwareMap.gyroSensor.get("gyro");
+
+        //rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+
+        //leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        //leftMotor.setMaxSpeed(maxTicksPerSecond);
+        //rightMotor.setMaxSpeed(maxTicksPerSecond);
+        // can be brake or float
+        //leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //leftMotor = null;
+        //rightMotor = null;
 
         //setup vuforia parameters
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -61,8 +97,9 @@ class Vuforia extends LinearOpMode {
         allTrackables = new ArrayList<>();
         allTrackables.addAll(parts);
 
+        //unit is mm
         float botWidth = (float) 457.2;
-        float feildWidth = 3580;
+        float feildWidth = 3658;
 
         /*to locate the robot based on the location of the trackable
         we must tell vuforia where the trackables are on the feild
@@ -70,7 +107,7 @@ class Vuforia extends LinearOpMode {
 
         //place the wheels on the wall.
         OpenGLMatrix wheelsTargetLocation = OpenGLMatrix
-                .translation(305, feildWidth / 2, 6)
+                .translation(305, feildWidth / 2, 12)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -80,7 +117,7 @@ class Vuforia extends LinearOpMode {
 
         //place the tools on the wall
         OpenGLMatrix toolsTargetLocation = OpenGLMatrix
-                .translation(-feildWidth / 2, -762, 6)
+                .translation(-feildWidth / 2, -762, 12)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XYX,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -89,7 +126,7 @@ class Vuforia extends LinearOpMode {
 
         //place the legos on the wall
         OpenGLMatrix legosTargetLocation = OpenGLMatrix
-                .translation(-762, feildWidth / 2, 6)
+                .translation(-762, feildWidth / 2, 12)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -99,7 +136,7 @@ class Vuforia extends LinearOpMode {
 
         //place the gears on the wall
         OpenGLMatrix gearsTargetLocation = OpenGLMatrix
-                .translation(-feildWidth / 2, -305, 6)
+                .translation(-feildWidth / 2, -305, 12)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -124,65 +161,59 @@ class Vuforia extends LinearOpMode {
         ((VuforiaTrackableDefaultListener) gearsTarget.getListener()).setPhoneInformation(phoneLocationObBot, parameters.cameraDirection);
 
         telemetry.addData("Vuforia", " Setup is Complete");
-
+        telemetry.update();
         waitForStart();
         //begin tracking the images
         parts.activate();
 
+        //resets encoders when you press start
+       // leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+        //leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //gyro.resetZAxisIntegrator();
         while (opModeIsActive()) {
 
             for (VuforiaTrackable trackable : allTrackables) {
-                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
-                //prints out position of trackable... hopefully
-                //TODO might break it so if there is error check here
-
-                try {
-                    //Puts thelocation of the trackable into a openGLmatrix
-                    OpenGLMatrix trackablePose = ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose();
-                    //matrix layout http://www.codinglabs.net/article_world_view_projection_matrix.aspx
-                    //{1,5,9,13}
-                    //{2,6,10,14}
-                    //{3,7,11,15}
-                    //{4,8,12,16}
-
-                    //matrix layout http://www.codinglabs.net/article_world_view_projection_matrix.aspx
-
-                    //parses out the cordinates of the robot from the transformation matrix
-                    String readableLocation = format(trackablePose);
-                    String[] locationList = readableLocation.split("\\{");
-                    String[] cords = locationList[2].split(" ");
-                    int cordX = Integer.parseInt(cords[0]);
-                    int cordY = Integer.parseInt(cords[1]);
-                    //logic to get robot to button
-                    if (cordY == 0){
-                        while (cordX > beaconOverhang) {
-                            //TODO make the wheel drive object
-                            //wheels.driveTime(0.5, 100, "FORWARD");
-                        }
-                    }
-
-                    telemetry.addData(trackable.getName() + " Location X", cords[0]);
-                    telemetry.addData(trackable.getName() + " Location Y", cords[1]);
-                    telemetry.addData(trackable.getName() + " Location Z", cords[2]);
-
-                } catch (Exception e) {
-                    telemetry.addData(trackable.getName() + " Location", " Unknown");
+                /**
+                 * getUpdatedRobotLocation() will return null if no new information is available since
+                 * the last time that call was made, or if the trackable is not currently visible.
+                 * getRobotLocation() will return null if the trackable is not currently visible.
+                 */
+                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
+                trackablePose = ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose();
+                telemetry.addData(trackable.getName(), trackablePose);
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                if (robotLocationTransform != null) {
+                    lastLocation = robotLocationTransform;
                 }
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
-                if (robotLocationTransform != null)
-                    lastPostition = robotLocationTransform;
             }
-            if (lastPostition != null) {
-                String lastLocation = format(lastPostition);
-                telemetry.addData("Position", lastLocation);
+            /**
+             * Provide feedback as to where the robot was last located (if we know).
+             */
+            if (lastLocation != null) {
+                //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
+                telemetry.addData("Pos", format(lastLocation));
             } else {
-                telemetry.addData("Position", "Unknown");
+                telemetry.addData("Pos", "Unknown");
             }
             telemetry.update();
+            idle();
         }
+
     }
     //small method to extract position information from a transformation matrix
     private String format(OpenGLMatrix matrix) {
         return matrix.formatAsTransform();
+    }
+    private double ticksToMM(int ticks){
+        double revolutions = (double) ticks * ticksPerRevolution;
+
+        double circ = 3.24459259 * 101.6;
+        double mm = revolutions * circ;
+        return mm;
     }
 }

@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 /**
  * Created by Robotics on 11/4/2016.
  */
-@Autonomous(name = "Autonomous Testing Red")
-public class AutonomousTest extends LinearOpMode {
+@Autonomous(name = "Autonomous")
+public class CenterVortexScoreX2 extends LinearOpMode {
 
     DcMotor leftMotor;
     DcMotor rightMotor;
@@ -71,7 +71,6 @@ public class AutonomousTest extends LinearOpMode {
         telemetry.addData("Ready to Start", "");
         telemetry.update();
         waitForStart();
-        gyro.resetZAxisIntegrator();
 
         leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -85,30 +84,25 @@ public class AutonomousTest extends LinearOpMode {
         sweeperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        driveDist(660);
+        while (leftMotor.getCurrentPosition() < MMtoTicks(670)){
+            leftMotor.setPower(0.5);
+            rightMotor.setPower(0.5);
+        }
         leftMotor.setPower(0);
         rightMotor.setPower(0);
 
         shoot();
 
-        liftMotor.setPower(-0.3);
+        liftMotor.setPower(-0.4);
         sleep(1000);
         liftMotor.setPower(0);
-        sleep(1000);
         shoot();
         shoot();
-        while (leftMotor.getCurrentPosition() < MMtoTicks(9060)){
+        while (leftMotor.getCurrentPosition() < MMtoTicks(1620)){
             leftMotor.setPower(0.5);
-            rightMotor.setPower(0.2);
+            rightMotor.setPower(0.5);
         }
-        while (leftMotor.getCurrentPosition() < MMtoTicks(1360)){
-            leftMotor.setPower(0.2);
-            rightMotor.setPower(0.6);
-        }
-        driveDist(1000);
 
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
     }
 
     public double scale(double power){
@@ -135,10 +129,10 @@ public class AutonomousTest extends LinearOpMode {
 
     public void shoot(){
 
-            //launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         int startPos = launchMotor.getCurrentPosition();
-            //launchMotor.setTargetPosition((int) (startPos+(ticksPerRevolutionAndy* 0.5)));
-            //launchMotor.setPower(.8);
+        //launchMotor.setTargetPosition((int) (startPos+(ticksPerRevolutionAndy* 0.5)));
+        //launchMotor.setPower(.8);
 
 
         while (launchMotor.getCurrentPosition() < startPos + (ticksPerRevolutionAndy * 1.1)) {
@@ -149,12 +143,5 @@ public class AutonomousTest extends LinearOpMode {
         launchMotor.setPower(0);
         telemetry.addData("Shooting", "Complete");
 
-    }
-
-    public void driveDist(int dis){
-        while (leftMotor.getCurrentPosition() < MMtoTicks(dis)){
-            leftMotor.setPower(0.5);
-            rightMotor.setPower(0.5);
-        }
     }
 }

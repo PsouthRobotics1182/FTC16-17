@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,8 +9,8 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 /**
  * Created by Robotics on 11/4/2016.
  */
-@Autonomous(name = "Autonomous Testing Red")
-public class AutonomousTest extends LinearOpMode {
+@TeleOp
+public class TeleOperations extends OpMode {
 
     DcMotor leftMotor;
     DcMotor rightMotor;
@@ -32,7 +30,7 @@ public class AutonomousTest extends LinearOpMode {
     int maxTicksPerSecondTetrix = maxRPMTetrix * ticksPerRevolutionTertix;
 
 
-    public void runOpMode() throws InterruptedException {
+    public void init(){
         leftMotor = hardwareMap.dcMotor.get("leftM");
         rightMotor = hardwareMap.dcMotor.get("rightM");
 
@@ -43,8 +41,8 @@ public class AutonomousTest extends LinearOpMode {
 
         gyro = hardwareMap.gyroSensor.get("gyro");
 
-        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         sweeperMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         launchMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -68,11 +66,10 @@ public class AutonomousTest extends LinearOpMode {
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         sweeperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         launchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        telemetry.addData("Ready to Start", "");
-        telemetry.update();
-        waitForStart();
-        gyro.resetZAxisIntegrator();
 
+    }
+
+    public void start(){
         leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -85,30 +82,85 @@ public class AutonomousTest extends LinearOpMode {
         sweeperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        driveDist(660);
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
+        /*gyro.calibrate();
+        while(gyro.isCalibrating()){}*/
 
-        shoot();
+        //gyro.resetZAxisIntegrator();
 
-        liftMotor.setPower(-0.3);
-        sleep(1000);
-        liftMotor.setPower(0);
-        sleep(1000);
-        shoot();
-        shoot();
-        while (leftMotor.getCurrentPosition() < MMtoTicks(9060)){
-            leftMotor.setPower(0.5);
-            rightMotor.setPower(0.2);
+    }
+    double liftPower = 0;
+    public void loop() {
+        double leftMotorPower = gamepad1.left_stick_y;
+        double rightMotorPower = gamepad1.right_stick_y;
+        double liftPower = gamepad2.left_stick_y;
+
+
+        leftMotorPower = scale(leftMotorPower);
+        rightMotorPower = scale(rightMotorPower);
+        liftPower = scale(liftPower);
+
+        if (gamepad2.a) {
+            //launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            int startPos = launchMotor.getCurrentPosition();
+            //launchMotor.setTargetPosition((int) (startPos+(ticksPerRevolutionAndy* 0.5)));
+            //launchMotor.setPower(.8);
+
+
+            while (launchMotor.getCurrentPosition() < startPos + (ticksPerRevolutionAndy * 0.5)) {
+                telemetry.addData("Cocking", "In Progress");
+                telemetry.update();
+                launchMotor.setPower(.4);
+            }
+            launchMotor.setPower(0);
+            telemetry.addData("Cocking", "Complete");
         }
-        while (leftMotor.getCurrentPosition() < MMtoTicks(1360)){
-            leftMotor.setPower(0.2);
-            rightMotor.setPower(0.6);
-        }
-        driveDist(1000);
 
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
+        if (gamepad1.right_bumper) {
+            sweeperMotor.setPower(-0.5);
+        } else if (gamepad1.left_bumper) {
+            sweeperMotor.setPower(0.5);
+        } else
+            sweeperMotor.setPower(0);
+
+
+
+
+        /*liftPower += gamepad2.left_stick_y;
+
+        if (gamepad1.right_trigger > 0.05){
+            liftPower += gamepad1.right_trigger;
+        //liftMotor.setPower(gamepad1.right_trigger);
+        }else if (gamepad1.left_trigger > 0.05) {
+            liftPower -= gamepad1.left_trigger;
+            //liftMotor.setPower(gamepad1.left_trigger);
+        }else
+            liftPower += 0;*/
+
+//        sweeperMotor.setPower(sweeperPower);
+        if (gamepad1.left_trigger > 0.5){
+            leftMotorPower = leftMotorPower/2;
+            rightMotorPower = rightMotorPower/2;
+        }
+
+
+        leftMotor.setPower(leftMotorPower);
+        rightMotor.setPower(rightMotorPower);
+        liftMotor.setPower(liftPower);
+
+
+        /*telemetry.addData("Gyro", gyro.getHeading());
+        telemetry.addData("Left Motor Position", leftMotor.getCurrentPosition());
+        telemetry.addData("Right Motor Position", rightMotor.getCurrentPosition());
+        //telemetry.addData("Lift Position", liftMotor.getCurrentPosition());*/
+        telemetry.addData("Left Trigger", gamepad1.left_trigger);
+        telemetry.addData("Right Trigger", gamepad1.right_trigger);
+        telemetry.addData("Lift Power", liftPower + "/" + liftMotor.getPower());
+//        telemetry.addData("Sweeper Position", sweeperMotor.getCurrentPosition());
+//        telemetry.addData("Sweeper Power", sweeperPower);
+//        telemetry.addData("Lift Power", liftPower + "/" + liftMotor.getPower());
+//        telemetry.addData("Launcher Position", launchMotor.getCurrentPosition());
+
+        //telemetry.addData("Launcher Power", shooterPower + "/" + gamepad2.right_stick_y + "/" + launchMotor.getPower());
     }
 
     public double scale(double power){
@@ -117,44 +169,5 @@ public class AutonomousTest extends LinearOpMode {
         else
             power = power * power;
         return power;
-    }
-    public double ticksToMM(int ticks){
-        double revolutions = (double) ticks * ticksPerRevolutionAndy;
-
-        double circ = 3.24459259 * 101.6;
-        double mm = revolutions * circ;
-        return mm;
-    }
-    public double MMtoTicks(int mm){
-        double circ = 3.24459259 * 101.6;
-        double revolutions = mm/circ;
-
-        double ticks = revolutions * ticksPerRevolutionAndy;
-        return ticks;
-    }
-
-    public void shoot(){
-
-            //launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        int startPos = launchMotor.getCurrentPosition();
-            //launchMotor.setTargetPosition((int) (startPos+(ticksPerRevolutionAndy* 0.5)));
-            //launchMotor.setPower(.8);
-
-
-        while (launchMotor.getCurrentPosition() < startPos + (ticksPerRevolutionAndy * 1.1)) {
-            telemetry.addData("Shooting", "In Progress");
-            telemetry.update();
-            launchMotor.setPower(.4);
-        }
-        launchMotor.setPower(0);
-        telemetry.addData("Shooting", "Complete");
-
-    }
-
-    public void driveDist(int dis){
-        while (leftMotor.getCurrentPosition() < MMtoTicks(dis)){
-            leftMotor.setPower(0.5);
-            rightMotor.setPower(0.5);
-        }
     }
 }
