@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by Robotics on 11/16/2016.
  */
-@Autonomous
+//@Autonomous
 public class AutonomousClass extends LinearOpMode{
 
     public void runOpMode() throws InterruptedException{

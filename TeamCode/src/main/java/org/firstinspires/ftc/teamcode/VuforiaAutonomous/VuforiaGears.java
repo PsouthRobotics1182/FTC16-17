@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-@Autonomous(name = "Gears Autonomous")
+//@Autonomous(name = "Gears Autonomous")
 public class VuforiaGears extends LinearOpMode {
 
 
