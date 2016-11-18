@@ -14,7 +14,7 @@ public class CenterVortecxScoring extends LinearOpMode {
     DcMotor liftMotor;
     DcMotor sweeperMotor;
     DcMotor launchMotor;
-
+        //tghis is a useless change
     GyroSensor gyro;
 
     //andymark motor specs
