@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 //class to show new cqabilties
 
 //register the class so it shows in app
-@Autonomous(name = "Example LinearOpMode", group = "LinearOpMode")
+//@Autonomous(name = "Example LinearOpMode", group = "LinearOpMode")
 //@Disabled //hides the class in the app menu
 public class AutonomousTest extends LinearOpMode {
     //define what motors are going to be in use

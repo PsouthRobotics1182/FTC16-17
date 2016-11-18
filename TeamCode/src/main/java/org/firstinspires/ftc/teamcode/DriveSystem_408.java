@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.*;
 import org.firstinspires.ftc.teamcode.OldOpmodes.*;
 
 
-@TeleOp
+//@TeleOp
 public class DriveSystem_408 extends OpMode
 {
 

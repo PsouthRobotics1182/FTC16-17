@@ -84,7 +84,7 @@ import java.util.List;
  * is explained below.
  */
 
-@Autonomous
+//@Autonomous
 public class VuforiaExample extends LinearOpMode {
 
     public static final String TAG = "Vuforia Sample";

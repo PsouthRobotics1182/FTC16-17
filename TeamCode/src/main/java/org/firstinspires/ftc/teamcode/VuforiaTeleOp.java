@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@TeleOp(name = "Test", group = "TeleOp")
+//@TeleOp(name = "Test", group = "TeleOp")
 class VuforiaTeleOp extends OpMode {
 
 

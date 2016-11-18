@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.OldOpmodes.Drive;
 
 
-@TeleOp  //This line tells the phone that we want to use this program as
+//@TeleOp  //This line tells the phone that we want to use this program as
 public class TestBot extends OpMode {               //an op mode and what its name and group it will be in is
   //That last line initialized the class TestBot as an OpMode. An op mode is just a program the robot executes
 

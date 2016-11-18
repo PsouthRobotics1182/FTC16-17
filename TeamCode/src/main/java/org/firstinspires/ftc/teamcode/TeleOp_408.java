@@ -18,6 +18,8 @@ public class TeleOp_408 extends OpMode
     DcMotor elevatorControl;
     //Servos
     Servo pusher;
+    Servo pusher2;
+    Servo ballpush;
 
     //drive values
     double left;
@@ -26,6 +28,8 @@ public class TeleOp_408 extends OpMode
     double hopper;
     double elevator;
     double popper;
+    double baller;
+    double buttonPush2;
    /* int ticksPerRevolution = 1440;
     int maxRPM = 152;
     int maxTicksPerSecond = maxRPM * ticksPerRevolution; */
@@ -42,6 +46,8 @@ public class TeleOp_408 extends OpMode
         popperMotor = hardwareMap.dcMotor.get("popper");
 
         pusher = hardwareMap.servo.get("pusher");
+        ballpush = hardwareMap.servo.get("baller");
+        pusher2 = hardwareMap.servo.get("pusher2");
 
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -62,36 +68,48 @@ public class TeleOp_408 extends OpMode
         right = Range.clip(right, -1, 1);
 
         //scale drive values for easier controlling
-        left = Drive.expo(left);
-        right = Drive.expo(right);
+       // left = Drive.expo(left);
+       // right = Drive.expo(right);
 
 
 
         if (gamepad1.a)
-            buttonpush = 1.0;
+            buttonpush = 0.8;
         if (gamepad1.b)
-            buttonpush = -1.0;
+            buttonpush = 0.0;
 
-        if (gamepad1.right_bumper)
+        if (gamepad1.x)
+            buttonPush2 = 0.8;
+        if (gamepad1.y)
+            buttonPush2 = 0.0;
+
+        if (gamepad2.right_bumper)
             popper = 1.0;
-        if (!(gamepad1.right_bumper == true))
-            popper = 0.0;
-        if (gamepad1.right_trigger >= 0.2)
+        if ( (gamepad2.right_bumper == false) && (gamepad1.right_trigger <= 0.2))
+            popper = 0;
+        if (gamepad2.right_trigger >= 0.2)
             popper = -1.0;
 
-        if (gamepad1.dpad_up)
+        if (gamepad2.dpad_up)
             elevator =  1.0;
-        if (gamepad1.dpad_down)
+        if (gamepad2.dpad_down)
             elevator = -1.0;
-        if ( (gamepad1.dpad_up == false) && (gamepad1.dpad_down == false))
+        if ( (gamepad2.dpad_up == false) && (gamepad1.dpad_down == false))
             elevator = 0;
 
         if (gamepad1.left_bumper)
             hopper = 1;
         if (gamepad1.left_trigger >= 0.2)
-            hopper = 1.0;
+            hopper = -1.0;
         if ( (gamepad1.left_bumper == false) && (gamepad1.left_trigger <= 0.2))
             hopper = 0;
+
+        if (gamepad2.dpad_left)
+            baller = 0.0;
+        if (gamepad2.dpad_right)
+            baller = 1.0;
+        if (gamepad2.dpad_right == false && gamepad2.dpad_left == false)
+            baller = 0.5;
 
 
 
@@ -101,13 +119,21 @@ public class TeleOp_408 extends OpMode
         hopperControl.setPower(hopper);
         elevatorControl.setPower(elevator);
         pusher.setPosition(buttonpush);
+        popperMotor.setPower(popper);
+        ballpush.setPosition(baller);
+        pusher.setPosition(buttonPush2);
+
+
 
         //telemetry
         telemetry.addData("Left Motor power: ", left);
         telemetry.addData("Right Motor power: ", right);
         telemetry.addData("Hopper Motor power: ", hopper);
         telemetry.addData("Elevator Motor power: ", elevator);
+        telemetry.addData("Popper Motor power: ", popper);
         telemetry.addData("Pusher Servo Position: ", buttonpush);
+        telemetry.addData("Ball Push Servo Position: ", baller);
+        telemetry.addData("Pusher2 Servo Position: ", buttonPush2);
 
     }
 }

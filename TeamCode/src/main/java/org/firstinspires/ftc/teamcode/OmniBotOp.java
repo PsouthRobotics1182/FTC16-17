@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.OldOpmodes.Drive;
 
 
-@TeleOp(name = "OmniBot", group = "TeleOp")
+//@TeleOp(name = "OmniBot", group = "TeleOp")
 public class OmniBotOp extends OpMode {
 
     //drive motors
