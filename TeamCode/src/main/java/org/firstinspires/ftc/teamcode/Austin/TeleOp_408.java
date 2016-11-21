@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Austin;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.*;
@@ -50,7 +50,9 @@ public class TeleOp_408 extends OpMode
         pusher2 = hardwareMap.servo.get("pusher2");
 
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         popperMotor.setDirection(DcMotor.Direction.FORWARD);
 
 
@@ -66,11 +68,6 @@ public class TeleOp_408 extends OpMode
         //clipping values so they dont exceed 100% on motors
         left = Range.clip(left, -1, 1);
         right = Range.clip(right, -1, 1);
-
-        //scale drive values for easier controlling
-       // left = Drive.expo(left);
-       // right = Drive.expo(right);
-
 
 
         if (gamepad1.a)
@@ -96,6 +93,8 @@ public class TeleOp_408 extends OpMode
             elevator = -1.0;
         if ( (gamepad2.dpad_up == false) && (gamepad1.dpad_down == false))
             elevator = 0;
+
+        elevator = Range.clip(elevator, -1, 1);
 
         if (gamepad1.left_bumper)
             hopper = 1;
