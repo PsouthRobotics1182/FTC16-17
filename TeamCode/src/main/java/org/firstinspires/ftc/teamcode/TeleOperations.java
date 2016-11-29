@@ -5,12 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by Robotics on 11/4/2016.
  */
-@TeleOp
+@TeleOp(name="telephone")
 public class TeleOperations extends OpMode {
+
+    static final double MAX_POS     =  1.0;     // Maximum rotational position
+    static final double MIN_POS     =  0.0;     // Minimum rotational position
 
     DcMotor leftMotor;
     DcMotor rightMotor;
@@ -18,6 +22,7 @@ public class TeleOperations extends OpMode {
     DcMotor sweeperMotor;
     DcMotor launchMotor;
 
+    Servo button;
     GyroSensor gyro;
 
     //andymark motor specs
@@ -38,6 +43,8 @@ public class TeleOperations extends OpMode {
         sweeperMotor = hardwareMap.dcMotor.get("sweepM");
 
         launchMotor = hardwareMap.dcMotor.get("launchM");
+
+        button = hardwareMap.servo.get("serv");
 
         gyro = hardwareMap.gyroSensor.get("gyro");
 
@@ -82,12 +89,8 @@ public class TeleOperations extends OpMode {
         sweeperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        /*gyro.calibrate();
-        while(gyro.isCalibrating()){}*/
-
-        //gyro.resetZAxisIntegrator();
-
     }
+    boolean press;
     double liftPower = 0;
     public void loop() {
         double leftMotorPower = gamepad1.left_stick_y;
@@ -99,6 +102,13 @@ public class TeleOperations extends OpMode {
         rightMotorPower = scale(rightMotorPower);
         liftPower = scale(liftPower);
 
+        if(gamepad1.a){
+            press = !press;
+            if(press)
+                button.setPosition(1);
+            else
+                button.setPosition(0);
+        }
         if (gamepad2.a) {
             //launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             int startPos = launchMotor.getCurrentPosition();
@@ -106,7 +116,7 @@ public class TeleOperations extends OpMode {
             //launchMotor.setPower(.8);
 
 
-            while (launchMotor.getCurrentPosition() < startPos + (ticksPerRevolutionAndy * 0.5)) {
+            while (launchMotor.getCurrentPosition() < startPos + (ticksPerRevolutionAndy)) {
                 telemetry.addData("Cocking", "In Progress");
                 telemetry.update();
                 launchMotor.setPower(.4);
@@ -122,24 +132,15 @@ public class TeleOperations extends OpMode {
         } else
             sweeperMotor.setPower(0);
 
-
-
-
-        /*liftPower += gamepad2.left_stick_y;
-
-        if (gamepad1.right_trigger > 0.05){
-            liftPower += gamepad1.right_trigger;
-        //liftMotor.setPower(gamepad1.right_trigger);
-        }else if (gamepad1.left_trigger > 0.05) {
-            liftPower -= gamepad1.left_trigger;
-            //liftMotor.setPower(gamepad1.left_trigger);
-        }else
-            liftPower += 0;*/
-
-//        sweeperMotor.setPower(sweeperPower);
         if (gamepad1.left_trigger > 0.5){
-            leftMotorPower = leftMotorPower/2;
-            rightMotorPower = rightMotorPower/2;
+            leftMotorPower = leftMotorPower/4;
+            rightMotorPower = rightMotorPower/4;
+            telemetry.clearAll();
+            telemetry.addData("Half ", "Power");
+        }
+        if (gamepad1.right_trigger > 0.5){
+            leftMotorPower = -leftMotorPower;
+            rightMotorPower = -rightMotorPower;
         }
 
 
@@ -148,19 +149,8 @@ public class TeleOperations extends OpMode {
         liftMotor.setPower(liftPower);
 
 
-        /*telemetry.addData("Gyro", gyro.getHeading());
-        telemetry.addData("Left Motor Position", leftMotor.getCurrentPosition());
-        telemetry.addData("Right Motor Position", rightMotor.getCurrentPosition());
-        //telemetry.addData("Lift Position", liftMotor.getCurrentPosition());*/
-        telemetry.addData("Left Trigger", gamepad1.left_trigger);
-        telemetry.addData("Right Trigger", gamepad1.right_trigger);
-        telemetry.addData("Lift Power", liftPower + "/" + liftMotor.getPower());
-//        telemetry.addData("Sweeper Position", sweeperMotor.getCurrentPosition());
-//        telemetry.addData("Sweeper Power", sweeperPower);
-//        telemetry.addData("Lift Power", liftPower + "/" + liftMotor.getPower());
-//        telemetry.addData("Launcher Position", launchMotor.getCurrentPosition());
+        telemetry.addData("Gyro", gyro.getHeading());
 
-        //telemetry.addData("Launcher Power", shooterPower + "/" + gamepad2.right_stick_y + "/" + launchMotor.getPower());
     }
 
     public double scale(double power){

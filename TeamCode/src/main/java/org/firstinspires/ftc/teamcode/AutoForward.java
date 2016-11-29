@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 /**
  * Created by Robotics on 11/4/2016.
  */
-//@Autonomous(name = "AutoMouse")
-public class CenterVortexScoreX2 extends LinearOpMode {
+//@Autonomous(name = "AutoForward")
+public class AutoForward extends LinearOpMode {
 
     DcMotor leftMotor;
     DcMotor rightMotor;
@@ -86,48 +86,16 @@ public class CenterVortexScoreX2 extends LinearOpMode {
         telemetry.addData("Beginning to Drive", "This is driving");
         telemetry.update();
         sleep(1000);
-        while (leftMotor.getCurrentPosition() < MMtoTicks(120)){
+        while (leftMotor.getCurrentPosition() < MMtoTicks(5000)){
             leftMotor.setPower(0.5);
             rightMotor.setPower(0.5);
             telemetry.addData("Position", ticksToMM(leftMotor.getCurrentPosition()));
             telemetry.update();
         }
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
-        telemetry.addData("Shooting", "Now");
-        telemetry.update();
-        sleep(1000);
 
-        shoot();
-
-        liftMotor.setPower(-0.3);
-        sleep(1000);
-        liftMotor.setPower(0);
-        shoot();
-        shoot();
-        while (leftMotor.getCurrentPosition() < MMtoTicks(1400)){
-            leftMotor.setPower(0.5);
-            rightMotor.setPower(0.5);
-        }
-        /*while (leftMotor.getCurrentPosition() < 2020){
-            leftMotor.setPower(0.5);
-            rightMotor.setPower(0);
-        }
-        while (leftMotor.getCurrentPosition() > 1520){
-            leftMotor.setPower(-0.5);
-            rightMotor.setPower(0);
-        }*/
         leftMotor.setPower(0);
         rightMotor.setPower(0);
 
-    }
-
-    public double scale(double power){
-        if (power < 0)
-            power = -(power * power);
-        else
-            power = power * power;
-        return power;
     }
     public double ticksToMM(int ticks){
         double revolutions = (double) ticks * ticksPerRevolutionAndy;
@@ -144,21 +112,4 @@ public class CenterVortexScoreX2 extends LinearOpMode {
         return ticks;
     }
 
-    public void shoot(){
-
-        //launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        int startPos = launchMotor.getCurrentPosition();
-        //launchMotor.setTargetPosition((int) (startPos+(ticksPerRevolutionAndy* 0.5)));
-        //launchMotor.setPower(.8);
-
-
-        while (launchMotor.getCurrentPosition() < startPos + (ticksPerRevolutionAndy * 1.1)) {
-            telemetry.addData("Shooting", "In Progress");
-            telemetry.update();
-            launchMotor.setPower(.4);
-        }
-        launchMotor.setPower(0);
-        telemetry.addData("Shooting", "Complete");
-
-    }
 }

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  * Created by Robotics on 11/4/2016.
  */
 @Autonomous(name = "Autonomous Testing Red")
+@Disabled
 public class AutonomousTest extends LinearOpMode {
 
     DcMotor leftMotor;

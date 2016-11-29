@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 /**
  * Created by Robotics on 11/4/2016.
  */
-//@Autonomous(name = "AutoMouse")
-public class CenterVortexScoreX2 extends LinearOpMode {
+//@Autonomous(name = "AutoMouse2")
+public class CenterVorex extends LinearOpMode {
 
     DcMotor leftMotor;
     DcMotor rightMotor;
@@ -117,6 +117,10 @@ public class CenterVortexScoreX2 extends LinearOpMode {
             leftMotor.setPower(-0.5);
             rightMotor.setPower(0);
         }*/
+        while(gyro.getHeading() > 0){
+            leftMotor.setPower(-0.5);
+            rightMotor.setPower(0.5);
+        }
         leftMotor.setPower(0);
         rightMotor.setPower(0);
 
@@ -138,7 +142,7 @@ public class CenterVortexScoreX2 extends LinearOpMode {
     }
     public double MMtoTicks(int mm){
         double circ = 3.24459259 * 101.6;
-        double revolutions = mm/circ;
+        double revolutions = circ;
 
         double ticks = revolutions * ticksPerRevolutionAndy;
         return ticks;

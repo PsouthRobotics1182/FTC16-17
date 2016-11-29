@@ -30,8 +30,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-@Autonomous(name = "AutoMoose")
-public class VuforiaGears extends LinearOpMode {
+@Autonomous(name = "AutoMouse")
+public class TurnNine extends LinearOpMode {
 
 
     final String TAG = "Vuforia";
@@ -204,26 +204,23 @@ public class VuforiaGears extends LinearOpMode {
 
         //gyro.resetZAxisIntegrator();
 
+        sleep(1000);
+        //drive distance minus width of the robot
+        drive(1524-227);
+        pivotRight(Math.PI/2);
+        //retrieves vuforia values
         int[] values = getDistance();
-
-        sleep(10000);
-        if (values[1] > 0){
-            pivotRight(degreesToRadians(Math.abs(90-values[1])));
-            drive(Math.abs(values[3]));
-            pivotLeft(Math.PI/2);
-            values = getDistance();
-            drive(Math.abs(values[4]));
-        }
-        if (values[1] < 0){
+        sleep(1000);
+        //values[4] is z distance
+        drive(values[4]);
+        /*if (values[1] < 0){
             pivotLeft(degreesToRadians(Math.abs(90-values[1])));
             drive(Math.abs(values[3]));
             pivotRight(Math.PI/2);
             values = getDistance();
             drive(Math.abs(values[4]));
-        }
+        }*/
 
-        telemetry.update();
-        idle();
 
 
     }
@@ -265,9 +262,11 @@ public class VuforiaGears extends LinearOpMode {
     }
     public void drive(int mm){
         resetEncoders();
-        while(leftMotor.getCurrentPosition() < MMtoTicks(mm)){
-            leftMotor.setPower(0.5);
-            rightMotor.setPower(0.5);
+        while(leftMotor.getCurrentPosition() < MMtoTicks(mm) && rightMotor.getCurrentPosition() <  MMtoTicks(mm)){
+            int error = leftMotor.getCurrentPosition() - rightMotor.getCurrentPosition();
+            int correction = error/10;
+            leftMotor.setPower(0.5 - correction);
+            rightMotor.setPower(0.5 + correction);
             telemetry.clearAll();
             telemetry.addData("Driving", "now");
             telemetry.addData("Left Motor Power", leftMotor.getPower());
@@ -282,8 +281,10 @@ public class VuforiaGears extends LinearOpMode {
     public void pivotRight(double radians) {
         resetEncoders();
         while(leftMotor.getCurrentPosition() < MMtoTicks((int)((double) radians * 200))){
-            leftMotor.setPower(0.5);
-            rightMotor.setPower(-0.5);
+            int error = leftMotor.getCurrentPosition() + rightMotor.getCurrentPosition();
+            int correction = error/10;
+            leftMotor.setPower(0.5 - correction);
+            rightMotor.setPower(0-(0.5 + correction));
             telemetry.clearAll();
             telemetry.addData("Pivoting", "Left");
             telemetry.addData("Left Motor Power", leftMotor.getPower());
@@ -298,8 +299,10 @@ public class VuforiaGears extends LinearOpMode {
     public void pivotLeft(double radians) {
         resetEncoders();
         while(rightMotor.getCurrentPosition() < MMtoTicks((int)((double) radians * 200))){
-            leftMotor.setPower(-0.5);
-            rightMotor.setPower(0.5);
+            int error = -leftMotor.getCurrentPosition() - rightMotor.getCurrentPosition();
+            int correction = error/10;
+            leftMotor.setPower(0-(0.5 - correction));
+            rightMotor.setPower(0.5 + correction);
             telemetry.clearAll();
             telemetry.addData("Pivoting", "Left");
             telemetry.addData("Left Motor Power", leftMotor.getPower());
@@ -325,7 +328,7 @@ public class VuforiaGears extends LinearOpMode {
         OpenGLMatrix pose;
         while(true){
             for (VuforiaTrackable trackable : allTrackables) {
-                if (trackable.getName().equals("Gears")) {
+                if (trackable.getName().equals("Legos")) {
                     /**
                      * getUpdatedRobotLocation() will return null if no new information is available since
                      * the last time that call was made, or if the trackable is not currently visible.
@@ -341,7 +344,7 @@ public class VuforiaGears extends LinearOpMode {
             if (trackablePose != null) {
                 String location = format(trackablePose);
                 telemetry.addData(format(trackablePose), "");
-                telemetry.update();
+                //splits string at spaces
                 Scanner sc = new Scanner(location).useDelimiter(" ");
                 String partOne = sc.next();
                 String partTwo = sc.next();
@@ -356,6 +359,7 @@ public class VuforiaGears extends LinearOpMode {
                 double partSeven = sc.nextDouble();
                 String partEight = sc.next();
                 double lengthY = partSeven;
+                //cuts bracket off of the last value
                 partEight = partEight.replace(partEight.substring(partEight.length() - 1), "");
                 double lengthZ = Double.parseDouble(partEight);
                 telemetry.addData("Angle X", angleX);
@@ -364,17 +368,20 @@ public class VuforiaGears extends LinearOpMode {
                 telemetry.addData("Length Y", lengthY);
                 telemetry.addData("Length Z", lengthZ);
                 telemetry.update();
+                //Put values in array
                 int[] values = new int[5];
                 values[0] = angleX;
                 values[1] = angleY;
                 values[2] = angleZ;
                 values[3] = (int) lengthY;
-                values[4] = (int) lengthY;
+                values[4] = (int) lengthZ;
+
                 telemetry.addData("Angle X", values[0]);
                 telemetry.addData("Angle Y", values[1]);
                 telemetry.addData("Angle Z", values[2]);
                 telemetry.addData("Length Y", values[3]);
                 telemetry.addData("Length Z", values[4]);
+                telemetry.addData("Pose", format(trackablePose));
                 telemetry.update();
                 return values;
 
