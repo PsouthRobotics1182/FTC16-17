@@ -38,11 +38,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -92,7 +95,9 @@ import org.firstinspires.ftc.robotcore.internal.AppUtil;
 import org.firstinspires.inspection.RcInspectionActivity;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Queue;
+import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class FtcRobotControllerActivity extends Activity {
@@ -527,5 +532,40 @@ public class FtcRobotControllerActivity extends Activity {
         }
       });
     }
+  }
+  public void takeScreenshot() {
+
+    try {
+      Random rand = new Random();
+      double now = rand.nextDouble();
+      // image naming and path  to include sd card  appending name you choose for file
+      String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
+
+      // create bitmap screen capture
+      View v1 = getWindow().getDecorView().getRootView();
+      v1.setDrawingCacheEnabled(true);
+      Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+      v1.setDrawingCacheEnabled(false);
+
+      File imageFile = new File(mPath);
+
+      FileOutputStream outputStream = new FileOutputStream(imageFile);
+      int quality = 100;
+      bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+      outputStream.flush();
+      outputStream.close();
+
+      openScreenshot(imageFile);
+    } catch (Throwable e) {
+      // Several error may come out with file handling or OOM
+      e.printStackTrace();
+    }
+  }
+  private void openScreenshot(File imageFile) {
+    Intent intent = new Intent();
+    intent.setAction(Intent.ACTION_VIEW);
+    Uri uri = Uri.fromFile(imageFile);
+    intent.setDataAndType(uri, "image*//*");
+    startActivity(intent);
   }
 }

@@ -1,11 +1,16 @@
 package org.firstinspires.ftc.teamcode.VuforiaAutonomous;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.hardware.Camera;
+import android.net.Uri;
+import android.os.Environment;
+import android.view.SurfaceView;
+import android.view.View;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-//import com.qualcomm.robotcore.hardware.DcMotor;
-//import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -21,10 +26,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.DriveSystem;
-import org.firstinspires.ftc.teamcode.OldOpmodes.Streamtest;
 import org.firstinspires.ftc.teamcode.R;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -194,16 +199,6 @@ public class TurnNine extends LinearOpMode {
         //begin tracking the images
         parts.activate();
 
-        //resets encoders when you press start
-        // leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
-        //leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //gyro.resetZAxisIntegrator();
-
         sleep(1000);
         //drive distance minus width of the robot
         drive(1524-227);
@@ -213,6 +208,7 @@ public class TurnNine extends LinearOpMode {
         sleep(1000);
         //values[4] is z distance
         drive(values[4]);
+
         /*if (values[1] < 0){
             pivotLeft(degreesToRadians(Math.abs(90-values[1])));
             drive(Math.abs(values[3]));
@@ -222,7 +218,7 @@ public class TurnNine extends LinearOpMode {
         }*/
 
 
-
+        parts.deactivate();
     }
     //small method to extract position information from a transformation matrix
     private String format(OpenGLMatrix matrix) {
@@ -244,11 +240,7 @@ public class TurnNine extends LinearOpMode {
     }
 
     public void shoot(){
-
-        //launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         int startPos = launchMotor.getCurrentPosition();
-        //launchMotor.setTargetPosition((int) (startPos+(ticksPerRevolutionAndy* 0.5)));
-        //launchMotor.setPower(.8);
 
 
         while (launchMotor.getCurrentPosition() < startPos + (ticksPerRevolutionAndy * 1.1)) {
