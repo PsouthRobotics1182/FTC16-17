@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.*;
 import org.firstinspires.ftc.teamcode.OldOpmodes.*;
 
 
-@TeleOp(name = "TeleOp_408", group = "TeleOp")
+//@TeleOp(name = "TeleOp_408", group = "TeleOp")
 public class TeleOp_408 extends OpMode
 {
 

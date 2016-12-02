@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 
-@TeleOp(name = "TeleOp_408", group = "TeleOp")
+//@TeleOp(name = "TeleOp_408", group = "TeleOp")
 public class TeleOp_408 extends OpMode
 {
 

@@ -79,8 +79,8 @@ public class TurnNine extends LinearOpMode {
 
         gyro = hardwareMap.gyroSensor.get("gyro");
 
-        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         sweeperMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         launchMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -204,8 +204,8 @@ public class TurnNine extends LinearOpMode {
         drive(1524-227);
         pivotRight(Math.PI/2);
         //retrieves vuforia values
-        int[] values = getDistance();
         sleep(1000);
+        int[] values = getDistance();
         //values[4] is z distance
         drive(values[4]);
 
@@ -255,10 +255,10 @@ public class TurnNine extends LinearOpMode {
     public void drive(int mm){
         resetEncoders();
         while(leftMotor.getCurrentPosition() < MMtoTicks(mm) && rightMotor.getCurrentPosition() <  MMtoTicks(mm)){
-            int error = leftMotor.getCurrentPosition() - rightMotor.getCurrentPosition();
-            int correction = error/10;
-            leftMotor.setPower(0.5 - correction);
-            rightMotor.setPower(0.5 + correction);
+            //int error = leftMotor.getCurrentPosition() - rightMotor.getCurrentPosition();
+            //int correction = error/500;
+            leftMotor.setPower(0.5);
+            rightMotor.setPower(0.45);
             telemetry.clearAll();
             telemetry.addData("Driving", "now");
             telemetry.addData("Left Motor Power", leftMotor.getPower());
@@ -272,18 +272,18 @@ public class TurnNine extends LinearOpMode {
     }
     public void pivotRight(double radians) {
         resetEncoders();
-        while(leftMotor.getCurrentPosition() < MMtoTicks((int)((double) radians * 200))){
-            int error = leftMotor.getCurrentPosition() + rightMotor.getCurrentPosition();
-            int correction = error/10;
-            leftMotor.setPower(0.5 - correction);
-            rightMotor.setPower(0-(0.5 + correction));
+        while(leftMotor.getCurrentPosition() < MMtoTicks((int)(radians * 200))){
+            /*int error = leftMotor.getCurrentPosition() + rightMotor.getCurrentPosition();
+            int correction = error/500;*/
+            leftMotor.setPower(-0.5);
+            rightMotor.setPower(0.5);
             telemetry.clearAll();
-            telemetry.addData("Pivoting", "Left");
+            telemetry.addData("Pivoting", "RIght");
             telemetry.addData("Left Motor Power", leftMotor.getPower());
             telemetry.addData("Right Motor Power", rightMotor.getPower());
             telemetry.update();
         }
-        telemetry.addData("Pivot Left", "Complete");
+        telemetry.addData("Pivot Right", "Complete");
         telemetry.update();
         leftMotor.setPower(0);
         rightMotor.setPower(0);
@@ -292,7 +292,7 @@ public class TurnNine extends LinearOpMode {
         resetEncoders();
         while(rightMotor.getCurrentPosition() < MMtoTicks((int)((double) radians * 200))){
             int error = -leftMotor.getCurrentPosition() - rightMotor.getCurrentPosition();
-            int correction = error/10;
+            int correction = error/500;
             leftMotor.setPower(0-(0.5 - correction));
             rightMotor.setPower(0.5 + correction);
             telemetry.clearAll();

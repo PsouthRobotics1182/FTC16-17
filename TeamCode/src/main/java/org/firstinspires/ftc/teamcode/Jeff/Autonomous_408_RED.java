@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by Robotics on 11/14/2016.
  */
 
-@Autonomous(name = "Autonomous-408-RED", group = "LinearOpMode")
+//@Autonomous(name = "Autonomous-408-RED", group = "LinearOpMode")
     public class Autonomous_408_RED extends LinearOpMode
     {
         DcMotor leftMotor;

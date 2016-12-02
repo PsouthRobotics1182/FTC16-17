@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 /**
  * Created by Robotics on 11/21/2016.
  */
-@Autonomous(name = "Encoder Test", group = "LinearOpMode")
+//@Autonomous(name = "Encoder Test", group = "LinearOpMode")
 public class Autonomous_Encoders extends LinearOpMode {
 
     DcMotor leftMotor;

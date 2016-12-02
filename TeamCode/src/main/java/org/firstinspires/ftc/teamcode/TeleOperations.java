@@ -50,8 +50,8 @@ public class TeleOperations extends OpMode {
 
         rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        sweeperMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        sweeperMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         launchMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
@@ -72,7 +72,7 @@ public class TeleOperations extends OpMode {
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         sweeperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        launchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        launchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
     }
 
@@ -100,7 +100,7 @@ public class TeleOperations extends OpMode {
 
         leftMotorPower = scale(leftMotorPower);
         rightMotorPower = scale(rightMotorPower);
-        liftPower = scale(liftPower);
+        liftPower = liftPower/2;
 
         if(gamepad1.a){
             press = !press;
@@ -116,7 +116,7 @@ public class TeleOperations extends OpMode {
             //launchMotor.setPower(.8);
 
 
-            while (launchMotor.getCurrentPosition() < startPos + (ticksPerRevolutionAndy)) {
+            while (launchMotor.getCurrentPosition() < startPos + (ticksPerRevolutionAndy * 1.1)) {
                 telemetry.addData("Cocking", "In Progress");
                 telemetry.update();
                 launchMotor.setPower(.4);
@@ -138,9 +138,20 @@ public class TeleOperations extends OpMode {
             telemetry.clearAll();
             telemetry.addData("Half ", "Power");
         }
-        if (gamepad1.right_trigger > 0.5){
-            leftMotorPower = -leftMotorPower;
-            rightMotorPower = -rightMotorPower;
+        if (gamepad2.right_trigger > 0.5){
+
+            rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+
+            leftMotor = hardwareMap.dcMotor.get("rightM");
+            rightMotor = hardwareMap.dcMotor.get("leftM");
+        } else {
+
+            leftMotor = hardwareMap.dcMotor.get("leftM");
+            rightMotor = hardwareMap.dcMotor.get("rightM");
+            rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+            leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
 
@@ -150,6 +161,9 @@ public class TeleOperations extends OpMode {
 
 
         telemetry.addData("Gyro", gyro.getHeading());
+        telemetry.addData("Lift Power", liftMotor.getPower());
+        telemetry.addData("Right Power", rightMotor.getPower() + "/" + rightMotor.getCurrentPosition());
+        telemetry.addData("Left Power", leftMotor.getPower() + "/" + leftMotor.getCurrentPosition());
 
     }
 
