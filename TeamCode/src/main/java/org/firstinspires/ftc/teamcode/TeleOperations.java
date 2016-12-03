@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 /**
  * Created by Robotics on 11/4/2016.
@@ -22,8 +26,12 @@ public class TeleOperations extends OpMode {
     DcMotor sweeperMotor;
     DcMotor launchMotor;
 
-    Servo button;
+    CRServo button;
     GyroSensor gyro;
+
+    ColorSensor color;
+
+    ModernRoboticsI2cRangeSensor range;
 
     //andymark motor specs
     int ticksPerRevolutionAndy = 1120;
@@ -44,9 +52,14 @@ public class TeleOperations extends OpMode {
 
         launchMotor = hardwareMap.dcMotor.get("launchM");
 
-        button = hardwareMap.servo.get("serv");
+        button = hardwareMap.crservo.get("serv");
 
         gyro = hardwareMap.gyroSensor.get("gyro");
+
+        color = hardwareMap.colorSensor.get("color");
+
+        range = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range");
+        //range = hardwareMap.mode.get("range");
 
         rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -89,6 +102,8 @@ public class TeleOperations extends OpMode {
         sweeperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        color.enableLed(false);
+
     }
     boolean press;
     double liftPower = 0;
@@ -100,15 +115,36 @@ public class TeleOperations extends OpMode {
 
         leftMotorPower = scale(leftMotorPower);
         rightMotorPower = scale(rightMotorPower);
-        liftPower = liftPower/2;
+        liftPower = liftPower/3;
 
-        if(gamepad1.a){
-            press = !press;
-            if(press)
-                button.setPosition(1);
-            else
-                button.setPosition(0);
+        //auto reoutine for testing
+        if(gamepad2.b){
+            button.setPower(0);
+            int blue = color.blue();
+            int red = color.red();
+            telemetry.addData("Color Blue", blue);
+            telemetry.addData("Color Red", red);
+
+
+            if (blue - red > 5) {
+                telemetry.clearAll();
+                telemetry.addData("Color", "Blue" + " " + color.argb());
+            }else if (red - blue > 5) {
+                telemetry.clearAll();
+                telemetry.addData("Color", "Red" + " " + color.argb());
+            } else {
+                telemetry.clearAll();
+                telemetry.addData("Color", color.argb());
+            }
         }
+
+
+        if(gamepad2.left_bumper)
+            button.setPower(-1);
+        else if (gamepad2.right_bumper)
+            button.setPower(1);
+        else
+            button.setPower(0);
         if (gamepad2.a) {
             //launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             int startPos = launchMotor.getCurrentPosition();
@@ -116,10 +152,10 @@ public class TeleOperations extends OpMode {
             //launchMotor.setPower(.8);
 
 
-            while (launchMotor.getCurrentPosition() < startPos + (ticksPerRevolutionAndy * 1.1)) {
+            while (launchMotor.getCurrentPosition() < startPos + (ticksPerRevolutionAndy * 1.2)) {
                 telemetry.addData("Cocking", "In Progress");
                 telemetry.update();
-                launchMotor.setPower(.4);
+                launchMotor.setPower(.6);
             }
             launchMotor.setPower(0);
             telemetry.addData("Cocking", "Complete");
@@ -158,12 +194,19 @@ public class TeleOperations extends OpMode {
         leftMotor.setPower(leftMotorPower);
         rightMotor.setPower(rightMotorPower);
         liftMotor.setPower(liftPower);
-
-
+        String colors;
+        if (color.red() > color.blue())
+            colors = "red";
+        else if (color.red() < color.blue())
+            colors = "blue";
+        else colors = "unknown";
         telemetry.addData("Gyro", gyro.getHeading());
         telemetry.addData("Lift Power", liftMotor.getPower());
         telemetry.addData("Right Power", rightMotor.getPower() + "/" + rightMotor.getCurrentPosition());
         telemetry.addData("Left Power", leftMotor.getPower() + "/" + leftMotor.getCurrentPosition());
+        telemetry.addData("Color", colors);
+        telemetry.addData("Range", range.cmUltrasonic());
+        telemetry.addData("Servo Position", button.getPower());
 
     }
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.VuforiaAutonomous;
+package org.firstinspires.ftc.teamcode;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -30,15 +31,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-@Autonomous(name = "AutoMoose Red")
-public class TurnNine extends LinearOpMode {
+@Autonomous(name = "AutoColor")
+public class ColorTest extends LinearOpMode {
 
 
     final String TAG = "Vuforia";
@@ -63,7 +61,7 @@ public class TurnNine extends LinearOpMode {
 
     ColorSensor color;
 
-    Servo button;
+    CRServo button;
 
     //andymark motor specs
     int ticksPerRevolutionAndy = 1120;
@@ -81,7 +79,7 @@ public class TurnNine extends LinearOpMode {
         liftMotor = hardwareMap.dcMotor.get("liftM");
         sweeperMotor = hardwareMap.dcMotor.get("sweepM");
 
-        button = hardwareMap.servo.get("serv");
+        button = hardwareMap.crservo.get("serv");
 
         launchMotor = hardwareMap.dcMotor.get("launchM");
 
@@ -206,29 +204,14 @@ public class TurnNine extends LinearOpMode {
         telemetry.addData("Vuforia", " Setup is Complete");
         telemetry.update();
         waitForStart();
+
+        color.enableLed(false);
         //begin tracking the images
         parts.activate();
 
         //drive distance minus width of the robot
         //drive(1524-227);
-        drive(350);
-        shoot();
-        liftMotor.setPower(0.3);
-        sleep(2000);
-        liftMotor.setPower(0);
-        shoot();
-        drive(250);
-        sleep(1000);
-        pivotRight(Math.PI/4);
-        drive((int) (600 * 1.7));
-        pivotRight(Math.PI/4 * 0.8);
-
-
-        //retrieves vuforia values\
-        int[] values = getDistance();
-        //values[4] is z distance
-        drive(values[4]);
-        button.setPosition(0);
+        button.setPower(0);
         int blue = color.blue();
         int red = color.red();
         telemetry.addData("Color Blue", blue);
@@ -237,10 +220,19 @@ public class TurnNine extends LinearOpMode {
         sleep(10000);
 
 
-        if (blue > red)
-            button.setPosition(0);
-        else if (red > blue)
-            button.setPosition(1);
+        if (blue - red > 5) {
+            button.setPower(-1);
+            sleep(1000);
+            button.setPower(0);
+        }else if (red - blue > 5) {
+            button.setPower(1);
+            sleep(1000);
+            button.setPower(0);
+        } else {
+            telemetry.clearAll();
+            telemetry.addData("Could not decide on color", "");
+            telemetry.update();
+        }
 
         /*if (values[1] < 0){
             pivotLeft(degreesToRadians(Math.abs(90-values[1])));
@@ -292,6 +284,24 @@ public class TurnNine extends LinearOpMode {
             //int correction = error/500;
             leftMotor.setPower(0.3);
             rightMotor.setPower(0.3);
+            telemetry.clearAll();
+            telemetry.addData("Driving", "now");
+            telemetry.addData("Left Motor Power", leftMotor.getPower());
+            telemetry.addData("Right Motor Power", rightMotor.getPower());
+            telemetry.update();
+        }
+        telemetry.addData("Drive", "Complete");
+        telemetry.update();
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+    }
+    public void driveR(int mm){
+        resetEncoders();
+        while(leftMotor.getCurrentPosition() < MMtoTicks(mm) && rightMotor.getCurrentPosition() <  MMtoTicks(mm)){
+            //int error = leftMotor.getCurrentPosition() - rightMotor.getCurrentPosition();
+            //int correction = error/500;
+            leftMotor.setPower(-0.3);
+            rightMotor.setPower(-0.3);
             telemetry.clearAll();
             telemetry.addData("Driving", "now");
             telemetry.addData("Left Motor Power", leftMotor.getPower());
