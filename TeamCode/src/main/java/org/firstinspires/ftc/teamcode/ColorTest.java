@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.view.SurfaceView;
 import android.view.View;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-@Autonomous(name = "AutoColor")
+@Autonomous(name = "AutoMouse COlor")
 public class ColorTest extends LinearOpMode {
 
 
@@ -63,6 +64,7 @@ public class ColorTest extends LinearOpMode {
 
     CRServo button;
 
+    ModernRoboticsI2cRangeSensor range;
     //andymark motor specs
     int ticksPerRevolutionAndy = 1120;
     int maxRPMAndy = 129;
@@ -86,6 +88,8 @@ public class ColorTest extends LinearOpMode {
         gyro = hardwareMap.gyroSensor.get("gyro");
 
         color = hardwareMap.colorSensor.get("color");
+
+        range = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range");
 
         rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -209,30 +213,93 @@ public class ColorTest extends LinearOpMode {
         //begin tracking the images
         parts.activate();
 
-        //drive distance minus width of the robot
-        //drive(1524-227);
+
+        //button.setPower(-1);
+        sleep(1000);
         button.setPower(0);
         int blue = color.blue();
         int red = color.red();
         telemetry.addData("Color Blue", blue);
         telemetry.addData("Color Red", red);
         telemetry.update();
-        sleep(10000);
 
-
-        if (blue - red > 5) {
+        if (red - blue > 5) {
             button.setPower(-1);
             sleep(1000);
             button.setPower(0);
-        }else if (red - blue > 5) {
+            drive(200);
+            driveR(150);
+
+            blue = color.blue();
+            red = color.red();
+            telemetry.addData("Color Blue", blue);
+            telemetry.addData("Color Red", red);
+            telemetry.update();
+
+            if (blue - red > 5)
+                drive(200);
+        }else if (blue - red > 5) {
             button.setPower(1);
             sleep(1000);
             button.setPower(0);
+            drive(200);
+            driveR(150);
+
+            blue = color.blue();
+            red = color.red();
+            telemetry.addData("Color Blue", blue);
+            telemetry.addData("Color Red", red);
+            telemetry.update();
+
+            if (blue - red > 5)
+                drive(200);
         } else {
             telemetry.clearAll();
             telemetry.addData("Could not decide on color", "");
             telemetry.update();
+
+            pivotLeft(0.2);
+            pivotRight(0.2);
+
+
+            if (red - blue > 5) {
+                button.setPower(-1);
+                sleep(1000);
+                button.setPower(0);
+                drive(200);
+                driveR(150);
+
+                blue = color.blue();
+                red = color.red();
+                telemetry.addData("Color Blue", blue);
+                telemetry.addData("Color Red", red);
+                telemetry.update();
+
+                if (blue - red > 5)
+                    drive(200);
+            }else if (blue - red > 5) {
+                button.setPower(1);
+                sleep(1000);
+                button.setPower(0);
+                drive(200);
+                driveR(150);
+                blue = color.blue();
+                red = color.red();
+                telemetry.addData("Color Blue", blue);
+                telemetry.addData("Color Red", red);
+                telemetry.update();
+
+                if (blue - red > 5)
+                    drive(200);
+            } else {
+                telemetry.clearAll();
+                telemetry.addData("Could not decide on color", "");
+                telemetry.update();
+            }
+
         }
+
+        driveR(1524);
 
         /*if (values[1] < 0){
             pivotLeft(degreesToRadians(Math.abs(90-values[1])));
@@ -280,6 +347,24 @@ public class ColorTest extends LinearOpMode {
     public void drive(int mm){
         resetEncoders();
         while(leftMotor.getCurrentPosition() < MMtoTicks(mm) && rightMotor.getCurrentPosition() <  MMtoTicks(mm)){
+            //int error = leftMotor.getCurrentPosition() - rightMotor.getCurrentPosition();
+            //int correction = error/500;
+            leftMotor.setPower(0.3);
+            rightMotor.setPower(0.3);
+            telemetry.clearAll();
+            telemetry.addData("Driving", "now");
+            telemetry.addData("Left Motor Power", leftMotor.getPower());
+            telemetry.addData("Right Motor Power", rightMotor.getPower());
+            telemetry.update();
+        }
+        telemetry.addData("Drive", "Complete");
+        telemetry.update();
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+    }
+    public void driveD(int cm){
+        resetEncoders();
+        while(range.cmUltrasonic() > cm){
             //int error = leftMotor.getCurrentPosition() - rightMotor.getCurrentPosition();
             //int correction = error/500;
             leftMotor.setPower(0.3);

@@ -190,6 +190,9 @@ public class TeleOperations extends OpMode {
             leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
+        if (gamepad2.x){
+            liftPower = -0.3;
+        }
 
         leftMotor.setPower(leftMotorPower);
         rightMotor.setPower(rightMotorPower);

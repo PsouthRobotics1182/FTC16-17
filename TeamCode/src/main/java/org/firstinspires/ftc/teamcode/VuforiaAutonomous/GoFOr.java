@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-@Autonomous(name = "AutoMouse Red")
-public class TurnEight extends LinearOpMode {
+@Autonomous(name = "AutoMouse FOrward")
+public class GoFOr extends LinearOpMode {
 
 
     final String TAG = "Vuforia";
@@ -215,121 +215,14 @@ public class TurnEight extends LinearOpMode {
 
         //drive distance minus width of the robot
         //drive(1524-227);
-        drive(360);
+        drive(1100);
         shoot();
-        liftMotor.setPower(0.3);
+        liftMotor.setPower(0.2);
         sleep(3000);
         liftMotor.setPower(0);
         shoot();
-        drive(240);
-        sleep(1000);
-        pivotLeft(Math.PI/4);
-        drive(1190);
-        pivotLeft(Math.PI/4 * 0.7);
-
-//
-//        //retrieves vuforia values\
-//        int[] values = getDistance();
-//        //values[4] is z distance
-//        if ((values[4] - 20) < 15)
-//            drive(values[4] - 20);
-//        else
-        driveD(15);
-
-
-
-        button.setPower(0);
-        sleep(1000);
-        button.setPower(0);
-        int blue = color.blue();
-        int red = color.red();
-        telemetry.addData("Color Blue", blue);
-        telemetry.addData("Color Red", red);
-        telemetry.update();
-        sleep(1000);
-
-        if (red > blue) {
-            button.setPower(-1);
-            sleep(1000);
-            button.setPower(0);
-            drive(200);
-            driveR(150);
-
-            blue = color.blue();
-            red = color.red();
-            telemetry.addData("Color Blue", blue);
-            telemetry.addData("Color Red", red);
-            telemetry.update();
-
-            if (blue > red)
-                drive(200);
-        }else if (blue >  red) {
-            button.setPower(1);
-            sleep(1000);
-            button.setPower(0);
-            drive(200);
-            driveR(150);
-
-            blue = color.blue();
-            red = color.red();
-            telemetry.addData("Color Blue", blue);
-            telemetry.addData("Color Red", red);
-            telemetry.update();
-
-            if (blue > red)
-                drive(200);
-        } else {
-            telemetry.clearAll();
-            telemetry.addData("Could not decide on color", "");
-            telemetry.update();
-            sleep(1000);
-            pivotLeft(0.2);
-            pivotRight(0.2);
-
-
-            if (red > blue) {
-                button.setPower(-1);
-                sleep(1000);
-                button.setPower(0);
-                drive(200);
-                driveR(150);
-
-                blue = color.blue();
-                red = color.red();
-
-                telemetry.addData("Color Blue", blue);
-                telemetry.addData("Color Red", red);
-                telemetry.update();
-
-                if (blue > red)
-                    drive(200);
-            }else if (blue > red) {
-                button.setPower(1);
-                sleep(1000);
-                button.setPower(0);
-                drive(200);
-                driveR(150);
-
-                blue = color.blue();
-                red = color.red();
-                telemetry.addData("Color Blue", blue);
-                telemetry.addData("Color Red", red);
-                telemetry.update();
-
-                if (blue > red)
-                    drive(200);
-            } else {
-                telemetry.clearAll();
-                telemetry.addData("Could not decide on color", "");
-                telemetry.update();
-            }
-
-        }
-
-        driveR(1500);
-        pivotRight(Math.PI);
-        drive(200);
-
+        sleep(10000);
+        drive(1250);
         parts.deactivate();
     }
     //small method to extract position information from a transformation matrix
