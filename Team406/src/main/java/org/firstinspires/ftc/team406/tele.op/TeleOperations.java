@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team406.tele.op;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
@@ -31,7 +33,8 @@ public class TeleOperations extends OpMode {
 
     ColorSensor color;
 
-    ModernRoboticsI2cRangeSensor range;
+    OpticalDistanceSensor lineL;
+    OpticalDistanceSensor lineR;
 
     //andymark motor specs
     int ticksPerRevolutionAndy = 1120;
@@ -54,13 +57,14 @@ public class TeleOperations extends OpMode {
 
         button = hardwareMap.crservo.get("serv");
 
-        gyro = hardwareMap.gyroSensor.get("gyro");
+        gyro = null;//gyro = hardwareMap.gyroSensor.get("gyro");
 
-        color = hardwareMap.colorSensor.get("color");
+        color = null;//color = hardwareMap.colorSensor.get("color");
 
-        range = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range");
-        //range = hardwareMap.mode.get("range");
-
+//        lineL = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lineL");
+//        lineR = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lineR");
+        lineL = hardwareMap.opticalDistanceSensor.get("lineL");
+        lineR = hardwareMap.opticalDistanceSensor.get("lineR");
         rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -102,7 +106,8 @@ public class TeleOperations extends OpMode {
         sweeperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        color.enableLed(false);
+        lineL.enableLed(true);
+        lineR.enableLed(true);
 
     }
     boolean press;
@@ -118,13 +123,12 @@ public class TeleOperations extends OpMode {
         liftPower = liftPower/3;
 
         //auto reoutine for testing
-        if(gamepad2.b){
+        /*if(gamepad2.b){
             button.setPower(0);
             int blue = color.blue();
             int red = color.red();
             telemetry.addData("Color Blue", blue);
             telemetry.addData("Color Red", red);
-
 
             if (blue - red > 5) {
                 telemetry.clearAll();
@@ -136,7 +140,7 @@ public class TeleOperations extends OpMode {
                 telemetry.clearAll();
                 telemetry.addData("Color", color.argb());
             }
-        }
+        }*/
 
 
         if(gamepad2.left_bumper)
@@ -197,19 +201,22 @@ public class TeleOperations extends OpMode {
         leftMotor.setPower(leftMotorPower);
         rightMotor.setPower(rightMotorPower);
         liftMotor.setPower(liftPower);
-        String colors;
+        /*String colors;
         if (color.red() > color.blue())
             colors = "red";
         else if (color.red() < color.blue())
             colors = "blue";
-        else colors = "unknown";
-        telemetry.addData("Gyro", gyro.getHeading());
+        else colors = "unknown";*/
+
+        //telemetry.addData("Gyro", gyro.getHeading());
         telemetry.addData("Lift Power", liftMotor.getPower());
         telemetry.addData("Right Power", rightMotor.getPower() + "/" + rightMotor.getCurrentPosition());
         telemetry.addData("Left Power", leftMotor.getPower() + "/" + leftMotor.getCurrentPosition());
-        telemetry.addData("Color", colors);
-        telemetry.addData("Range", range.cmUltrasonic());
-        telemetry.addData("Servo Position", button.getPower());
+        telemetry.addData("Left Value", lineL.getLightDetected() + " / " + lineL.getRawLightDetected());
+        telemetry.addData("Right Value", lineR.getLightDetected() + " / " + lineR.getRawLightDetected());
+        //telemetry.addData("Color", colors);
+        //telemetry.addData("Range", range.cmUltrasonic());
+        //telemetry.addData("Servo Position", button.getPower());
 
     }
 

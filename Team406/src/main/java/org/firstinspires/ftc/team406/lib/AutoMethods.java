@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.lib;
+package org.firstinspires.ftc.team406.lib;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -6,10 +6,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-public class AutoMethods extends LinearOpMode{
-
-    @Override
-    public void runOpMode(){}
+public abstract class AutoMethods extends DriveSystem{
 
     DcMotor liftMotor;
     DcMotor sweeperMotor;
@@ -19,7 +16,7 @@ public class AutoMethods extends LinearOpMode{
 
     ColorSensor color;
 
-    public AutoMethods(){
+    public void autoSetup(){
 
         liftMotor = hardwareMap.dcMotor.get("liftM");
         sweeperMotor = hardwareMap.dcMotor.get("sweepM");
@@ -63,7 +60,7 @@ public class AutoMethods extends LinearOpMode{
 
     }
 
-    public void pressButton(DriveSystem drive, String target) throws InterruptedException{
+    public void pressButton(String target) throws InterruptedException{
 
         button.setPower(-1);
         sleep(1000);
@@ -78,8 +75,8 @@ public class AutoMethods extends LinearOpMode{
                 button.setPower(-1);
                 sleep(1000);
                 button.setPower(0);
-                drive.drive(200, 0.5);
-                drive.driveR(150, 0.5);
+                drive(200, 0.5);
+                driveR(150, 0.5);
 
                 blue = color.blue();
                 red = color.red();
@@ -88,13 +85,13 @@ public class AutoMethods extends LinearOpMode{
                 telemetry.update();
 
                 if (blue - red > 5)
-                    drive.drive(200, 0.5);
+                    drive(200, 0.5);
             } else if (blue - red > 5) {
                 button.setPower(1);
                 sleep(1000);
                 button.setPower(0);
-                drive.drive(200, 0.5);
-                drive.driveR(150, 0.5);
+                drive(200, 0.5);
+                driveR(150, 0.5);
 
                 blue = color.blue();
                 red = color.red();
@@ -103,22 +100,22 @@ public class AutoMethods extends LinearOpMode{
                 telemetry.update();
 
                 if (blue - red > 5)
-                    drive.drive(200, 0.5);
+                    drive(200, 0.5);
             } else {
                 telemetry.clearAll();
                 telemetry.addData("Could not decide on color", "");
                 telemetry.update();
 
-                drive.pivotLeft(0.2);
-                drive.pivotRight(0.2);
+                pivotLeft(0.2);
+                pivotRight(0.2);
 
 
                 if (red - blue > 5) {
                     button.setPower(-1);
                     sleep(1000);
                     button.setPower(0);
-                    drive.drive(200, 0.5);
-                    drive.driveR(150, 0.5);
+                    drive(200, 0.5);
+                    driveR(150, 0.5);
 
                     blue = color.blue();
                     red = color.red();
@@ -127,13 +124,13 @@ public class AutoMethods extends LinearOpMode{
                     telemetry.update();
 
                     if (blue - red > 5)
-                        drive.drive(200, 0.5);
+                        drive(200, 0.5);
                 } else if (blue - red > 5) {
                     button.setPower(1);
                     sleep(1000);
                     button.setPower(0);
-                    drive.drive(200, 0.5);
-                    drive.driveR(150, 0.5);
+                    drive(200, 0.5);
+                    driveR(150, 0.5);
 
                     blue = color.blue();
                     red = color.red();
@@ -142,7 +139,7 @@ public class AutoMethods extends LinearOpMode{
                     telemetry.update();
 
                     if (blue - red > 5)
-                        drive.drive(200, 0.5);
+                        drive(200, 0.5);
                 } else {
                     telemetry.clearAll();
                     telemetry.addData("Could not decide on color", "");
@@ -155,8 +152,8 @@ public class AutoMethods extends LinearOpMode{
                 button.setPower(-1);
                 sleep(1000);
                 button.setPower(0);
-                drive.drive(200, 0.5);
-                drive.driveR(150, 0.5);
+                drive(200, 0.5);
+                driveR(150, 0.5);
 
                 blue = color.blue();
                 red = color.red();
@@ -165,13 +162,13 @@ public class AutoMethods extends LinearOpMode{
                 telemetry.update();
 
                 if (red - blue > 5)
-                    drive.drive(200, 0.5);
+                    drive(200, 0.5);
             } else if (red - blue > 5) {
                 button.setPower(1);
                 sleep(1000);
                 button.setPower(0);
-                drive.drive(200, 0.5);
-                drive.driveR(150, 0.5);
+                drive(200, 0.5);
+                driveR(150, 0.5);
 
                 blue = color.blue();
                 red = color.red();
@@ -180,22 +177,22 @@ public class AutoMethods extends LinearOpMode{
                 telemetry.update();
 
                 if (red - blue > 5)
-                    drive.drive(200, 0.5);
+                    drive(200, 0.5);
             } else {
                 telemetry.clearAll();
                 telemetry.addData("Could not decide on color", "");
                 telemetry.update();
 
-                drive.pivotLeft(0.2, 0.2);
-                drive.pivotRight(0.2, 0.2);
+                pivotLeft(0.2, 0.2);
+                pivotRight(0.2, 0.2);
 
 
                 if (blue - red > 5) {
                     button.setPower(-1);
                     sleep(1000);
                     button.setPower(0);
-                    drive.drive(200, 0.5);
-                    drive.driveR(150, 0.5);
+                    drive(200, 0.5);
+                    driveR(150, 0.5);
 
                     blue = color.blue();
                     red = color.red();
@@ -204,13 +201,13 @@ public class AutoMethods extends LinearOpMode{
                     telemetry.update();
 
                     if (red - blue > 5)
-                        drive.drive(200, 0.5);
+                        drive(200, 0.5);
                 } else if (red - blue > 5) {
                     button.setPower(1);
                     sleep(1000);
                     button.setPower(0);
-                    drive.drive(200, 0.5);
-                    drive.driveR(150, 0.5);
+                    drive(200, 0.5);
+                    driveR(150, 0.5);
 
                     blue = color.blue();
                     red = color.red();
@@ -219,7 +216,7 @@ public class AutoMethods extends LinearOpMode{
                     telemetry.update();
 
                     if (red - blue > 5)
-                        drive.drive(200, 0.5);
+                        drive(200, 0.5);
                 } else {
                     telemetry.clearAll();
                     telemetry.addData("Could not decide on color", "");
