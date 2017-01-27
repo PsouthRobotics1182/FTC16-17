@@ -10,8 +10,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.team406.R;
-import org.firstinspires.ftc.team406.lib.DriveSystem;
+
 
 @Autonomous
 public class VuforiaNavigationExample extends DriveSystem {

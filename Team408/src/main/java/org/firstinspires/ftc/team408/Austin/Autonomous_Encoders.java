@@ -1,15 +1,18 @@
-package org.firstinspires.ftc.teamcode.Austin;
+package org.firstinspires.ftc.team408.Austin;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.GyroSensor;
+
 
 /**
  * Created by Robotics on 11/21/2016.
  */
-//@Autonomous(name = "Encoder Test", group = "LinearOpMode")
+@Autonomous(name = "408 Auton Test Mode", group = "LinearOpMode")
+@Disabled
 public class Autonomous_Encoders extends LinearOpMode {
 
     DcMotor leftMotor;
@@ -17,15 +20,14 @@ public class Autonomous_Encoders extends LinearOpMode {
     DcMotor elevator;
     DcMotor popper;
 
+    ColorSensor color;
+
 
     //andymark motor specs
     int ticksPerRevolutionAndy = 1120;
     int maxRPMAndy = 129;
     int maxTicksPerSecondAndy = maxRPMAndy * ticksPerRevolutionAndy;
-    //tertix motor specs
-    int ticksPerRevolutionTertix = 1440;
-    int maxRPMTetrix = 142;
-    int maxTicksPerSecondTetrix = maxRPMTetrix * ticksPerRevolutionTertix;
+
 
 
     public void runOpMode() throws InterruptedException {
@@ -35,25 +37,74 @@ public class Autonomous_Encoders extends LinearOpMode {
         setEncoders();
 
 
-        while (leftMotor.getCurrentPosition() < MMtoTicks(210))
+        while (leftMotor.getCurrentPosition() < MMtoTicks(210)) {
             drivePower(0.5);
+        }
 
         drivePower(0);
 
-        runElevator();
 
-        while (popper.getCurrentPosition() < ticksPerRevolutionAndy)
-            popper.setPower(1.0);
+
+        popper.setPower(-1);
+        sleep(1000);
 
         popper.setPower(0);
 
-        rotate(90);
+        runElevator();
+
+        popper.setPower(-1);
+        sleep(1000);
+
+        popper.setPower(0);
+
+        rotate(Math.PI / 4);
+
+        double ticks = leftMotor.getCurrentPosition() + MMtoTicks(500);
+
+       while (leftMotor.getCurrentPosition() < ticks) {
+            drivePower(1.0);
+        }
+        drivePower(0);
+
+        rotate(Math.PI / 4);
+
+        ticks = leftMotor.getCurrentPosition() + MMtoTicks(500);
+
+        while (leftMotor.getCurrentPosition() < ticks) {
+            drivePower(1.0);
+        }
+        drivePower(0);
+
+        while (opModeIsActive())  {
 
 
+
+            telemetry.addData("Red  ", color.red());
+            telemetry.addData("Blue ", color.blue());
+
+            if (color.blue() > color.red())
+                telemetry.addData("Blue", "");
+            else
+                telemetry.addData("Red", "");
+            telemetry.update();
+
+            idle(); //Always end a while (opModeIsActive()) loop with an idle();
+        }
 
 
 
     }
+
+
+
+
+
+
+
+
+
+
+
 
     //Robot Methods
     public void drivePower(double power)
@@ -65,14 +116,16 @@ public class Autonomous_Encoders extends LinearOpMode {
     public void runElevator() throws InterruptedException
     {
         elevator.setPower(1.0);
-        sleep(1000);
+        sleep(2000);
         elevator.setPower(0);
     }
 
-    public void rotate(double degrees)
+    public void rotate(double radians)
     {
-        double radians = degrees * (180 / Math.PI);
-        double ticks = MMtoTicks(115) * radians;
+        double radius =  (16 / 5) * 228.6; //radius 9 inches in MM
+        double arc = radians * radius;
+
+        double ticks = leftMotor.getCurrentPosition() + MMtoTicks((int) arc);
 
         while (leftMotor.getCurrentPosition() < ticks)
         {
@@ -100,13 +153,13 @@ public class Autonomous_Encoders extends LinearOpMode {
     public double ticksToMM(int ticks) {
         double revolutions = (double) ticks * ticksPerRevolutionAndy;
 
-        double circ = 3.24459259 * 101.6;
+        double circ = 3.1415926535 * 101.6;
         double mm = revolutions * circ;
         return mm;
     }
 
     public double MMtoTicks(int mm) {
-        double circ = 3.24459259 * 101.6;
+        double circ = 3.1415926535 * 101.6;
         double revolutions = mm / circ;
 
         double ticks = revolutions * ticksPerRevolutionAndy;
@@ -123,8 +176,11 @@ public class Autonomous_Encoders extends LinearOpMode {
         rightMotor = hardwareMap.dcMotor.get("rightM");
         elevator = hardwareMap.dcMotor.get("elevator");
         popper = hardwareMap.dcMotor.get("popper");
+        color = hardwareMap.colorSensor.get("color");
 
-        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        color.enableLed(false);
+
+        rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

@@ -1,12 +1,13 @@
-package org.firstinspires.ftc.teamcode.Austin;
+package org.firstinspires.ftc.team408.Austin;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
-import org.firstinspires.ftc.teamcode.OldOpmodes.*;
 
 
-//@TeleOp(name = "TeleOp_408", group = "TeleOp")
+
+@TeleOp(name = "TeleOp_408", group = "TeleOp")
 public class TeleOp_408 extends OpMode
 {
 
@@ -14,46 +15,77 @@ public class TeleOp_408 extends OpMode
     DcMotor leftMotor;
     DcMotor rightMotor;
     DcMotor popperMotor;
-    DcMotor hopperControl;
-    DcMotor elevatorControl;
+    DcMotor lift;
+
     //Servos
-    Servo pusher;
-    Servo pusher2;
-    Servo ballpush;
+    Servo buttonPush;
+    Servo ball;
+
+
+    ColorSensor color;
+    LightSensor light;
+    ModernRoboticsI2cRangeSensor rangeSensor;
+
 
     //drive values
     double left;
     double right;
-    double buttonpush;
-    double hopper;
-    double elevator;
+    double UP = -1.0;
+    double DOWN = 1.0;
+
+    double liftPower;
     double popper;
-    double baller;
-    double buttonPush2;
-   /* int ticksPerRevolution = 1440;
+    double buttonPusher;
+
+    Boolean speed = true;
+    Boolean ballCatch = true;
+
+
+
+    int ticksPerRevolution = 1440;
     int maxRPM = 152;
-    int maxTicksPerSecond = maxRPM * ticksPerRevolution; */
+    int maxTicksPerSecond = maxRPM * ticksPerRevolution;
 
     @Override
     public void init()
     {
 
+        //andymark motor specs
+        int ticksPerRevolutionAndy = 1120;
+        int maxRPMAndy = 129;
+        int maxTicksPerSecondAndy = maxRPMAndy * ticksPerRevolutionAndy;
+
         //Mapping physical motors to variable
         leftMotor = hardwareMap.dcMotor.get("leftM");
         rightMotor = hardwareMap.dcMotor.get("rightM");
-        hopperControl= hardwareMap.dcMotor.get("hopper");
-        elevatorControl = hardwareMap.dcMotor.get("elevator");
         popperMotor = hardwareMap.dcMotor.get("popper");
+        buttonPush = hardwareMap.servo.get("buttonPusher");
+        light = hardwareMap.lightSensor.get("light sensor");
+        ball = hardwareMap.servo.get("ball");
 
-        pusher = hardwareMap.servo.get("pusher");
-        ballpush = hardwareMap.servo.get("baller");
-        pusher2 = hardwareMap.servo.get("pusher2");
+
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        leftMotor.setMaxSpeed(maxTicksPerSecondAndy);
+        rightMotor.setMaxSpeed(maxTicksPerSecondAndy);
+
+
+        lift = hardwareMap.dcMotor.get("Lift");
 
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         popperMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        light.enableLed(true);
 
 
 
@@ -62,77 +94,78 @@ public class TeleOp_408 extends OpMode
     @Override
     public void loop()
     {
-        left = gamepad1.left_stick_y;
-        right = gamepad1.right_stick_y;
+        right = -gamepad1.left_stick_y;
+        left = gamepad1.right_stick_y;
 
         //clipping values so they dont exceed 100% on motors
         left = Range.clip(left, -1, 1);
         right = Range.clip(right, -1, 1);
 
+        if (gamepad2.right_bumper)
+            popper = 1;
+        if (gamepad2.right_bumper == false)
+            popper = 0;
 
         if (gamepad1.a)
-            buttonpush = 0.8;
+            buttonPusher = 1;
         if (gamepad1.b)
-            buttonpush = 0.0;
+            buttonPusher = 0.0;
 
-        if (gamepad1.x)
-            buttonPush2 = 0.8;
-        if (gamepad1.y)
-            buttonPush2 = 0.0;
-
-        if (gamepad2.right_bumper)
-            popper = 1.0;
-        if ( (gamepad2.right_bumper == false) && (gamepad1.right_trigger <= 0.2))
-            popper = 0;
-        if (gamepad2.right_trigger >= 0.2)
-            popper = -1.0;
-
-        if (gamepad2.dpad_up)
-            elevator =  1.0;
-        if (gamepad2.dpad_down)
-            elevator = -1.0;
-        if ( (gamepad2.dpad_up == false) && (gamepad1.dpad_down == false))
-            elevator = 0;
-
-        elevator = Range.clip(elevator, -1, 1);
-
-        if (gamepad1.left_bumper)
-            hopper = 1;
-        if (gamepad1.left_trigger >= 0.2)
-            hopper = -1.0;
-        if ( (gamepad1.left_bumper == false) && (gamepad1.left_trigger <= 0.2))
-            hopper = 0;
-
-        if (gamepad2.dpad_left)
-            baller = 0.0;
-        if (gamepad2.dpad_right)
-            baller = 1.0;
-        if (gamepad2.dpad_right == false && gamepad2.dpad_left == false)
-            baller = 0.5;
+        if (gamepad1.dpad_up)
+            speed = true;
+        if (gamepad1.dpad_down)
+            speed = false;
 
 
+        if (gamepad2.left_bumper)
+        {
+            liftPower = UP;
+            ballCatch = false;
+        }
+        if (gamepad2.left_trigger >= 0.2)
+            liftPower = DOWN;
+        if ( (gamepad2.left_bumper == false) && (gamepad2.left_trigger <= 0.2))
+            liftPower = 0;
 
         //assign motors their values
-        leftMotor.setPower(left);
-        rightMotor.setPower(right);
-        hopperControl.setPower(hopper);
-        elevatorControl.setPower(elevator);
-        pusher.setPosition(buttonpush);
+
+        if (speed == true)
+        {
+            leftMotor.setPower(left);
+            rightMotor.setPower(-right);
+        }
+
+        if (speed == false)
+        {
+            leftMotor.setPower(left * 0.25);
+            rightMotor.setPower(-right * 0.25);
+        }
+
+
         popperMotor.setPower(popper);
-        ballpush.setPosition(baller);
-        pusher.setPosition(buttonPush2);
+        buttonPush.setPosition(buttonPusher);
+        lift.setPower(liftPower);
+
+        if (ballCatch == true)
+            ball.setPosition(0.6);
+        if (ballCatch == false)
+            ball.setPosition(0.0);
+
+
+
 
 
 
         //telemetry
         telemetry.addData("Left Motor power: ", left);
         telemetry.addData("Right Motor power: ", right);
-        telemetry.addData("Hopper Motor power: ", hopper);
-        telemetry.addData("Elevator Motor power: ", elevator);
         telemetry.addData("Popper Motor power: ", popper);
-        telemetry.addData("Pusher Servo Position: ", buttonpush);
-        telemetry.addData("Ball Push Servo Position: ", baller);
-        telemetry.addData("Pusher2 Servo Position: ", buttonPush2);
+        telemetry.addData("Left Motor Position:", leftMotor.getCurrentPosition());
+        telemetry.addData("Right Motor Position:", rightMotor.getCurrentPosition());
+        telemetry.addData("Light Sensor:", light.getRawLightDetected());
+
+
+
 
     }
 }

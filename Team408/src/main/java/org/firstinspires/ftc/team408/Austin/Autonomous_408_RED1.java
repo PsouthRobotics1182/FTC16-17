@@ -12,9 +12,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by Robotics on 11/21/2016.
  */
-@Autonomous(name = "408 Auton BLUE", group = "LinearOpMode")
+@Autonomous(name = "408 Auton RED", group = "LinearOpMode")
 @Disabled
-public class Autonomous_408_BLUE extends LinearOpMode {
+public class Autonomous_408_RED1 extends LinearOpMode {
 
     DcMotor leftMotor;
     DcMotor rightMotor;
@@ -41,11 +41,12 @@ public class Autonomous_408_BLUE extends LinearOpMode {
 
 
         while (leftMotor.getCurrentPosition() < MMtoTicks(210)) {
-            drivePower(0.25);
+            drivePower(0.5);
         }
 
         drivePower(0);
         sleep(1000);
+
 
 
         popper.setPower(-1);
@@ -54,15 +55,6 @@ public class Autonomous_408_BLUE extends LinearOpMode {
         popper.setPower(0);
 
         runElevator();
-        sleep(750);
-
-        elevator.setPower(-1.0);
-        sleep(4000);
-
-        elevator.setPower(0);
-
-        runElevator();
-        sleep(750);
 
         popper.setPower(-1);
         sleep(1000);
@@ -71,7 +63,7 @@ public class Autonomous_408_BLUE extends LinearOpMode {
 
         rotate(Math.PI / 4);
 
-        double ticks = leftMotor.getCurrentPosition() + MMtoTicks(800);
+        double ticks = leftMotor.getCurrentPosition() + MMtoTicks(700);
 
         while (leftMotor.getCurrentPosition() < ticks) {
             drivePower(0.5);
@@ -80,10 +72,10 @@ public class Autonomous_408_BLUE extends LinearOpMode {
 
         rotate(Math.PI / 2.5);
 
-        ticks = leftMotor.getCurrentPosition() + MMtoTicks(500);
+        ticks = leftMotor.getCurrentPosition() + MMtoTicks(175);
 
         while (leftMotor.getCurrentPosition() < ticks) {
-            drivePower(1.0);
+            drivePower(0.5);
         }
         drivePower(0);
 
@@ -99,8 +91,8 @@ public class Autonomous_408_BLUE extends LinearOpMode {
             if (color.blue() > color.red()) {
                 telemetry.addData("Blue", "");
                 telemetry.update();
-                buttonPush.setPosition(1.0);
-                ticks = leftMotor.getCurrentPosition() + MMtoTicks(300);
+                buttonPush.setPosition(0.0);
+                ticks = leftMotor.getCurrentPosition() + MMtoTicks(100);
 
                 drivePower(0.0);
                 sleep(1000);
@@ -109,7 +101,6 @@ public class Autonomous_408_BLUE extends LinearOpMode {
                     drivePower(0.25);
                 }
                 drivePower(0);
-                sleep(1000);
                 break;
 
 
@@ -118,8 +109,8 @@ public class Autonomous_408_BLUE extends LinearOpMode {
             if (color.blue() < color.red()) {
                 telemetry.addData("Red", "");
                 telemetry.update();
-                buttonPush.setPosition(0.0);
-                ticks = leftMotor.getCurrentPosition() + MMtoTicks(300);
+                buttonPush.setPosition(1.0);
+                ticks = leftMotor.getCurrentPosition() + MMtoTicks(100);
 
                 drivePower(0.0);
                 sleep(1000);
@@ -128,13 +119,12 @@ public class Autonomous_408_BLUE extends LinearOpMode {
                     drivePower(0.25);
                 }
                 drivePower(0);
-                sleep(1000);
                 break;
 
             }
             telemetry.update();
 
-            if (c== 100)
+            if (c== 2000)
             {
                 break;
             }
@@ -146,17 +136,10 @@ public class Autonomous_408_BLUE extends LinearOpMode {
 
 
 
-        popper.setPower(-1);
-        sleep(500);
-        popper.setPower(0);
-
         drivePower(-1.0);
         sleep(2000);
 
         rotate(Math.PI);
-
-        drivePower(1);
-        sleep(1000);
 
         drivePower(0);
 
@@ -179,7 +162,7 @@ public class Autonomous_408_BLUE extends LinearOpMode {
     public void drivePower(double power)
     {
         leftMotor.setPower(power);
-        rightMotor.setPower(power);
+        rightMotor.setPower(power );
     }
 
     public void runElevator() throws InterruptedException
@@ -189,26 +172,7 @@ public class Autonomous_408_BLUE extends LinearOpMode {
         elevator.setPower(0);
     }
 
-
-    public void rotate(double radians) {
-        double radius = (16 / 5) * 228.6; //radius 9 inches in MM
-        double arc = radians * radius;
-
-        double ticks = leftMotor.getCurrentPosition() - MMtoTicks((int) arc);
-
-        while (leftMotor.getCurrentPosition() > ticks) {
-            leftMotor.setPower(-1.0);
-            rightMotor.setPower(1.0);
-            telemetry.addData("Right Motor position: ", leftMotor.getCurrentPosition());
-            telemetry.addData("Target Position", ticks);
-            telemetry.update();
-        }
-
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
-    }
-
-    public void rotateRight(double radians)
+    public void rotate(double radians)
     {
         double radius =  (16 / 5) * 228.6; //radius 9 inches in MM
         double arc = radians * radius;
@@ -216,6 +180,24 @@ public class Autonomous_408_BLUE extends LinearOpMode {
         double ticks = leftMotor.getCurrentPosition() + MMtoTicks((int) arc);
 
         while (leftMotor.getCurrentPosition() < ticks)
+        {
+            leftMotor.setPower(0.5);
+            rightMotor.setPower(-0.5);
+        }
+
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+    }
+
+
+    public void rotateRight(double radians)
+    {
+        double radius =  (16 / 5) * 228.6; //radius 9 inches in MM
+        double arc = radians * radius;
+
+        double ticks = rightMotor.getCurrentPosition() + MMtoTicks((int) arc);
+
+        while (rightMotor.getCurrentPosition() < ticks)
         {
             leftMotor.setPower(-1.0);
             rightMotor.setPower(1.0);
