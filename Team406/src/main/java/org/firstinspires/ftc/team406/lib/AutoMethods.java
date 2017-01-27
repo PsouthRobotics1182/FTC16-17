@@ -8,11 +8,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public abstract class AutoMethods extends DriveSystem{
 
-    DcMotor liftMotor;
+    public DcMotor liftMotor;
     DcMotor sweeperMotor;
     DcMotor launchMotor;
 
-    CRServo button;
+    public CRServo button;
 
     ColorSensor color;
 
@@ -28,7 +28,7 @@ public abstract class AutoMethods extends DriveSystem{
 
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         sweeperMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        launchMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        launchMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
 
@@ -38,7 +38,7 @@ public abstract class AutoMethods extends DriveSystem{
 
         //liftMotor.setMaxSpeed(maxTicksPerSecondTetrix);
         sweeperMotor.setMaxSpeed(DriveSystem.maxTicksPerSecondAndy);
-        launchMotor.setMaxSpeed(DriveSystem.maxTicksPerSecondAndy);
+        launchMotor.setMaxSpeed(DriveSystem.maxTicksPerSecondAndy60);
         // can be brake or float
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         sweeperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -46,14 +46,16 @@ public abstract class AutoMethods extends DriveSystem{
 
     }
 
-    public void shoot(){
+    public void shoot() throws InterruptedException{
+
+        telemetry.clearAll();
         int startPos = launchMotor.getCurrentPosition();
 
-
-        while (launchMotor.getCurrentPosition() < startPos + (DriveSystem.ticksPerRevolutionAndy * 1.2)) {
+        while (opModeIsActive() && launchMotor.getCurrentPosition() < startPos + (DriveSystem.ticksPerRevolutionAndy60 * 1.1)) {
             telemetry.addData("Shooting", "In Progress");
             telemetry.update();
             launchMotor.setPower(.4);
+            idle();
         }
         launchMotor.setPower(0);
         telemetry.addData("Shooting", "Complete");
@@ -62,18 +64,17 @@ public abstract class AutoMethods extends DriveSystem{
 
     public void pressButton(String target) throws InterruptedException{
 
-        button.setPower(-1);
-        sleep(1000);
-        button.setPower(0);
+        telemetry.clearAll();
+
         int blue = color.blue();
         int red = color.red();
         telemetry.addData("Color Blue", blue);
         telemetry.addData("Color Red", red);
         telemetry.update();
         if (target.equals("red")) {
-            if (red - blue > 5) {
+            if (red > blue) {
                 button.setPower(-1);
-                sleep(1000);
+                sleep(2000);
                 button.setPower(0);
                 drive(200, 0.5);
                 driveR(150, 0.5);
@@ -83,12 +84,11 @@ public abstract class AutoMethods extends DriveSystem{
                 telemetry.addData("Color Blue", blue);
                 telemetry.addData("Color Red", red);
                 telemetry.update();
-
-                if (blue - red > 5)
+                if (blue > red)
                     drive(200, 0.5);
-            } else if (blue - red > 5) {
+            } else if (blue > red) {
                 button.setPower(1);
-                sleep(1000);
+                sleep(2000);
                 button.setPower(0);
                 drive(200, 0.5);
                 driveR(150, 0.5);
@@ -98,21 +98,19 @@ public abstract class AutoMethods extends DriveSystem{
                 telemetry.addData("Color Blue", blue);
                 telemetry.addData("Color Red", red);
                 telemetry.update();
-
-                if (blue - red > 5)
+                if (blue > red)
                     drive(200, 0.5);
             } else {
                 telemetry.clearAll();
                 telemetry.addData("Could not decide on color", "");
                 telemetry.update();
-
                 pivotLeft(0.2);
                 pivotRight(0.2);
 
 
-                if (red - blue > 5) {
+                if (red > blue) {
                     button.setPower(-1);
-                    sleep(1000);
+                    sleep(2000);
                     button.setPower(0);
                     drive(200, 0.5);
                     driveR(150, 0.5);
@@ -123,11 +121,11 @@ public abstract class AutoMethods extends DriveSystem{
                     telemetry.addData("Color Red", red);
                     telemetry.update();
 
-                    if (blue - red > 5)
+                    if (blue > red)
                         drive(200, 0.5);
-                } else if (blue - red > 5) {
+                } else if (blue > red) {
                     button.setPower(1);
-                    sleep(1000);
+                    sleep(2000);
                     button.setPower(0);
                     drive(200, 0.5);
                     driveR(150, 0.5);
@@ -138,7 +136,7 @@ public abstract class AutoMethods extends DriveSystem{
                     telemetry.addData("Color Red", red);
                     telemetry.update();
 
-                    if (blue - red > 5)
+                    if (blue > red)
                         drive(200, 0.5);
                 } else {
                     telemetry.clearAll();
@@ -148,9 +146,9 @@ public abstract class AutoMethods extends DriveSystem{
 
             }
         } else if (target.equals("blue")){
-            if (blue - red > 5) {
+            if (blue > red) {
                 button.setPower(-1);
-                sleep(1000);
+                sleep(2000);
                 button.setPower(0);
                 drive(200, 0.5);
                 driveR(150, 0.5);
@@ -161,11 +159,11 @@ public abstract class AutoMethods extends DriveSystem{
                 telemetry.addData("Color Red", red);
                 telemetry.update();
 
-                if (red - blue > 5)
+                if (red > blue)
                     drive(200, 0.5);
-            } else if (red - blue > 5) {
+            } else if (red > blue) {
                 button.setPower(1);
-                sleep(1000);
+                sleep(2000);
                 button.setPower(0);
                 drive(200, 0.5);
                 driveR(150, 0.5);
@@ -176,7 +174,7 @@ public abstract class AutoMethods extends DriveSystem{
                 telemetry.addData("Color Red", red);
                 telemetry.update();
 
-                if (red - blue > 5)
+                if (red > blue)
                     drive(200, 0.5);
             } else {
                 telemetry.clearAll();
@@ -187,9 +185,9 @@ public abstract class AutoMethods extends DriveSystem{
                 pivotRight(0.2, 0.2);
 
 
-                if (blue - red > 5) {
+                if (blue > red) {
                     button.setPower(-1);
-                    sleep(1000);
+                    sleep(2000);
                     button.setPower(0);
                     drive(200, 0.5);
                     driveR(150, 0.5);
@@ -200,11 +198,11 @@ public abstract class AutoMethods extends DriveSystem{
                     telemetry.addData("Color Red", red);
                     telemetry.update();
 
-                    if (red - blue > 5)
+                    if (red > blue)
                         drive(200, 0.5);
-                } else if (red - blue > 5) {
+                } else if (red > blue) {
                     button.setPower(1);
-                    sleep(1000);
+                    sleep(2000);
                     button.setPower(0);
                     drive(200, 0.5);
                     driveR(150, 0.5);
@@ -215,7 +213,7 @@ public abstract class AutoMethods extends DriveSystem{
                     telemetry.addData("Color Red", red);
                     telemetry.update();
 
-                    if (red - blue > 5)
+                    if (red > blue)
                         drive(200, 0.5);
                 } else {
                     telemetry.clearAll();

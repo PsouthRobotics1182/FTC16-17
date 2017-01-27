@@ -7,36 +7,41 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.LightSensor;
 
-//TODO add opModeIsActive to all loops
 public abstract class DriveSystem extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
     }
 
-    DcMotor leftMotor;
-    DcMotor rightMotor;
+    public DcMotor leftMotor;
+    public DcMotor rightMotor;
 
     ModernRoboticsI2cRangeSensor range;
 
-    LightSensor line;
+    LightSensor lineC;
+    LightSensor lineF;
 
     //andymark motor specs
     static int ticksPerRevolutionAndy = 1120;
     static int maxRPMAndy = 129;
     static int maxTicksPerSecondAndy = maxRPMAndy * ticksPerRevolutionAndy;
+    static int ticksPerRevolutionAndy60 = 1680;
+    static int maxRPMAndy60 = 105;
+    static int maxTicksPerSecondAndy60 = maxRPMAndy60 * ticksPerRevolutionAndy60;
     //tertix motor specs
     static int ticksPerRevolutionTertix = 1440;
     static int maxRPMTetrix = 142;
     static int maxTicksPerSecondTetrix = maxRPMTetrix * ticksPerRevolutionTertix;
 
     public void configure() {
+
+        telemetry.clearAll();
         leftMotor = hardwareMap.dcMotor.get("leftM");
         rightMotor = hardwareMap.dcMotor.get("rightM");
 
-        range = null;//range = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range");
+        range = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range");
 
-        line = hardwareMap.lightSensor.get("line");
-
+        lineC = hardwareMap.lightSensor.get("lineC");
+        lineF = hardwareMap.lightSensor.get("lineF");
         setDirection("FORWARD");
 
         //set run mode to use encoders
@@ -49,20 +54,28 @@ public abstract class DriveSystem extends LinearOpMode {
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        line.enableLed(true);
+        lineC.enableLed(true);
+        lineF.enableLed(true);
     }
 
     //drives forward a certain distance
-    public void drive(int mm, double power) {
+    public void drive(int mm, double power) throws InterruptedException {
+
+        telemetry.clearAll();
         resetEncoders(); //resets the encoders so i can keep a accurate distance measurements
         //runs while encoders give a position less than the intended distance
         while (opModeIsActive() && (leftMotor.getCurrentPosition() < MMtoTicks(mm) && rightMotor.getCurrentPosition() < MMtoTicks(mm))) {
+
+            double percentToGo = rightMotor.getCurrentPosition()/ MMtoTicks(mm);
+            percentToGo += 0.1;
+            if (percentToGo > 1) percentToGo = 1;
             drive(power);
             telemetry.clearAll();
             telemetry.addData("Driving", "now");
             telemetry.addData("Left Motor Power", leftMotor.getCurrentPosition());
             telemetry.addData("Right Motor Power", rightMotor.getCurrentPosition());
             telemetry.update();
+            idle();
         }
         telemetry.addData("Drive", "Complete");
         telemetry.update();
@@ -70,18 +83,25 @@ public abstract class DriveSystem extends LinearOpMode {
     }
 
     //drives until sonar reads a certain distance
-    public void driveD(int mm, double power) {  //uses mm so it is consistnent with the rest of the methods
+    public void driveD(int mm, double power) throws InterruptedException {  //uses mm so it is consistnent with the rest of the methods
+
+        telemetry.clearAll();
+        telemetry.addData("Driving Distance", range.cmUltrasonic());
+        telemetry.update();
         //converts mm to cm
-        double cm = ((double) mm) / 100;
+        int cm = mm / 10;
         resetEncoders(); //resets the encoders so i can keep a accurate distance measurements
         //runs while the ultasonic sensor reads higher than the desired cm
         while (opModeIsActive() && (range.cmUltrasonic() > cm)) {
             drive(power);
             telemetry.clearAll();
-            telemetry.addData("Driving", "now");
-            telemetry.addData("Left Motor Power", leftMotor.getCurrentPosition());
-            telemetry.addData("Right Motor Power", rightMotor.getCurrentPosition());
+            telemetry.addData("Driving Distance", range.cmUltrasonic());
             telemetry.update();
+            idle();
+        }
+
+        if (range.cmUltrasonic() < 10){
+            driveR((int) (cm-range.cmUltrasonic()), 0.3);
         }
         telemetry.addData("Drive", "Complete");
         telemetry.update();
@@ -89,7 +109,9 @@ public abstract class DriveSystem extends LinearOpMode {
     }
 
     //drives in reverse a certain distance
-    public void driveR(int mm, double power) {
+    public void driveR(int mm, double power) throws InterruptedException {
+
+        telemetry.clearAll();
         resetEncoders(); //resets the encoders so i can keep a accurate distance measurements
         setDirection("REVERSE");
         //runs until desired distance is reacehed
@@ -100,6 +122,7 @@ public abstract class DriveSystem extends LinearOpMode {
             telemetry.addData("Left Motor Power", leftMotor.getCurrentPosition());
             telemetry.addData("Right Motor Power", rightMotor.getCurrentPosition());
             telemetry.update();
+            idle();
         }
         setDirection("FORWARD");
         telemetry.addData("Drive", "Complete");
@@ -108,52 +131,52 @@ public abstract class DriveSystem extends LinearOpMode {
     }
 
     //drives until it sees a line
-    public void driveL(double power) {
+    public void driveLF(double power) throws InterruptedException{
+        telemetry.clearAll();
         resetEncoders(); //resets the encoders so i can keep a accurate distance measurements
         //runs while the ultasonic sensor reads higher than the desired cm
-        while (opModeIsActive() && (!lineThere())) {
+        while (opModeIsActive() && !lineThereFront()) {
             drive(power);
             telemetry.clearAll();
-            telemetry.addData("Driving", "now");
+            telemetry.addData("Following", "now");
             telemetry.addData("Left Motor Power", leftMotor.getCurrentPosition());
             telemetry.addData("Right Motor Power", rightMotor.getCurrentPosition());
-            telemetry.addData("Line Color", line.getRawLightDetected());
+//            telemetry.addData("Left Line Color", lineL.getRawLightDetected());
+//            telemetry.addData("Right Line Color", lineR.getRawLightDetected());
+            telemetry.addData("Range", range.cmUltrasonic());
+            //telemetry.addData("Line", lineThere());
             telemetry.update();
+            idle();
         }
-        telemetry.addData("Drive", "Complete");
+        telemetry.addData("Follow", "Complete");
         telemetry.update();
         stopMotors();
     }
-
-    //follows the line
-    public void followLineRight(double power) {
-        line.enableLed(true);
+    public void driveLC(double power) throws InterruptedException {
+        telemetry.clearAll();
         resetEncoders(); //resets the encoders so i can keep a accurate distance measurements
-        //runs while encoders give a position less than the intended distance
-        while (!lineThere()) {
-            pivotRight(0.2);
-        }
-        while (opModeIsActive()) {
-            if (!lineThere()) {
-                leftMotor.setPower(power + 0.01);
-                rightMotor.setPower(power - 0.01);
-            } else if (lineThere()) {
-                leftMotor.setPower(power - 0.01);
-                rightMotor.setPower(power + 0.01);
-            }
+        //runs while the ultasonic sensor reads higher than the desired cm
+        while (opModeIsActive() && !lineThereCenter()) {
+            drive(power);
             telemetry.clearAll();
-            telemetry.addData("Following", lineThere());
+            telemetry.addData("Following", "now");
             telemetry.addData("Left Motor Power", leftMotor.getCurrentPosition());
             telemetry.addData("Right Motor Power", rightMotor.getCurrentPosition());
+//            telemetry.addData("Left Line Color", lineL.getRawLightDetected());
+//            telemetry.addData("Right Line Color", lineR.getRawLightDetected());
+            telemetry.addData("Range", range.cmUltrasonic());
+            //telemetry.addData("Line", lineThere());
             telemetry.update();
+            idle();
         }
-        telemetry.addData("Following", "Complete");
+        telemetry.addData("Follow", "Complete");
         telemetry.update();
         stopMotors();
-
     }
 
-    public void pivotRight(double radians, double power) {
+    public void pivotRight(double radians, double power) throws InterruptedException{
+
+        telemetry.clearAll();
         resetEncoders(); //resets the encoders so i can keep a accurate distance measurements
         while (opModeIsActive() && (rightMotor.getCurrentPosition() < MMtoTicks((int) (radians * 220)))) {
             leftMotor.setPower(-power);
@@ -163,6 +186,7 @@ public abstract class DriveSystem extends LinearOpMode {
             telemetry.addData("Left Motor Power", leftMotor.getCurrentPosition());
             telemetry.addData("Right Motor Power", rightMotor.getCurrentPosition());
             telemetry.update();
+            idle();
         }
         telemetry.addData("Pivot Right", "Complete");
         telemetry.update();
@@ -175,17 +199,19 @@ public abstract class DriveSystem extends LinearOpMode {
         rightMotor.setPower(power);
     }
 
-    public void pivotLeft(double radians, double power) {
+    public void pivotLeft(double radians, double power) throws InterruptedException {
+
+        telemetry.clearAll();
         radians = calibrateTurn(radians);
         resetEncoders(); //resets the encoders so i can keep a accurate distance measurements
         while (opModeIsActive() && (leftMotor.getCurrentPosition() < MMtoTicks((int) (radians * 220)))) {
-            leftMotor.setPower(power);
-            rightMotor.setPower(-power);
+            pivotLeft(power);
             telemetry.clearAll();
             telemetry.addData("Pivoting", "Left");
             telemetry.addData("Left Motor Power", leftMotor.getCurrentPosition());
             telemetry.addData("Right Motor Power", rightMotor.getCurrentPosition());
             telemetry.update();
+            idle();
         }
         telemetry.addData("Pivot Left", "Complete");
         telemetry.update();
@@ -193,7 +219,9 @@ public abstract class DriveSystem extends LinearOpMode {
     }
 
     //does sweeping turns
-    public void turnLeft(double radius, double radians, double power) {
+    public void turnLeft(double radius, double radians, double power) throws  InterruptedException {
+
+        telemetry.clearAll();
         resetEncoders();
         double outerCirc = Math.PI * radius;
         double innerCirc = Math.PI * (radius - 220);
@@ -203,14 +231,15 @@ public abstract class DriveSystem extends LinearOpMode {
             telemetry.addData("Turning", "Left");
             telemetry.addData("Left Motor Power", leftMotor.getCurrentPosition());
             telemetry.addData("Right Motor Power", rightMotor.getCurrentPosition());
+            idle();
         }
         stopMotors();
     }
 
     //sets wheel power so we can endlessly turn
     public void pivotLeft(double power) {
-        leftMotor.setPower(-power);
-        rightMotor.setPower(power);
+        leftMotor.setPower(power);
+        rightMotor.setPower(-power);
     }
 
     //sets a certain power
@@ -218,20 +247,25 @@ public abstract class DriveSystem extends LinearOpMode {
         leftMotor.setPower(power);
         rightMotor.setPower(power);
     }
-
+    //TODO when any command is run after this there is a variable delay lasting 3-10 sec
     public void stopMotors() {
         drive(0);
     }
 
     //checks for line precense
-    public boolean lineThere() {
-        telemetry.addData("Line There", line.getRawLightDetected());
-        return line.getRawLightDetected() > 1.8;
+    public boolean lineThereCenter() {
+        telemetry.addData("Line There", lineC.getLightDetected());
+        return lineC.getLightDetected() > 0.5;
     }
+    public boolean lineThereFront() {
+        telemetry.addData("Line There", lineF.getLightDetected());
+        return lineF.getLightDetected() > 0.4;
+    }
+    //public boolean lineThere(){        return lineThereLeft() || lineThereRight();}
 
-    //calibrates turing istance to account wheel slide
+    //calibrates turing istance to account wheel slidef
     public double calibrateTurn(double radians) {
-        return radians * 0.95;
+        return radians * 0.90;
     }
 
     private void resetEncoders() {

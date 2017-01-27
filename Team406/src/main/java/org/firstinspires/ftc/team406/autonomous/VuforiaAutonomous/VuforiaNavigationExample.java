@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team406.autonomous;
+package org.firstinspires.ftc.team406.autonomous.VuforiaAutonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.team406.R;
 import org.firstinspires.ftc.team406.lib.DriveSystem;
 
-@Autonomous
+//@Autonomous
 public class VuforiaNavigationExample extends DriveSystem {
 
     @Override
