@@ -39,12 +39,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+
 @Autonomous(name = "BEACON RED", group = "LinearOpMode")
 public class BEACON_RED extends LinearOpMode {
     DcMotor leftMotor;
     DcMotor rightMotor;
     DcMotor popper;
 
+    Servo ball;
     Servo buttonPusher;
 
     LightSensor lightSensor;  // Hardware Device Object
@@ -66,6 +68,9 @@ public class BEACON_RED extends LinearOpMode {
     final static private double RIGHT = 0.0;
     final static private double LEFT = 1.0;
 
+    final static private double OUT = 0.6;
+    final static private double IN = 0.0;
+
 
     //andymark motor specs
     int ticksPerRevolutionAndy = 1120;
@@ -84,6 +89,7 @@ public class BEACON_RED extends LinearOpMode {
         while (opModeIsActive()) {
 
             //rotates to the right about 45 degrees
+            ball.setPosition(OUT);
             buttonPusher.setPosition(LEFT);
 
             lineThenButton("RED");
@@ -93,8 +99,8 @@ public class BEACON_RED extends LinearOpMode {
             buttonPusher.setPosition(LEFT);
 
             lineThenButton("RED");
-            break;
 
+            break;
 
 
         }
@@ -108,12 +114,12 @@ public class BEACON_RED extends LinearOpMode {
 
     public void hitBothButtons() throws InterruptedException
     {
-        lineThenButton("RED");
+        lineThenButton("Blue");
 
-        rotateRight(Math.PI / 2, HALF_POWER);
+        rotateLeft(Math.PI / 2, HALF_POWER);
         buttonPusher.setPosition(LEFT);
 
-        lineThenButton("RED");
+        lineThenButton("Blue");
 
     }
 
@@ -162,7 +168,7 @@ public class BEACON_RED extends LinearOpMode {
                 drivePower(power);
 
             } else if (light <= LIGHT_MARGIN_OF_ERROR) {
-                turnRight(power);
+                turnLeft(power);
             }
 
             if (sonarDist < 13) {
@@ -201,8 +207,10 @@ public class BEACON_RED extends LinearOpMode {
     public void hitLeftButton() throws InterruptedException
     {
         buttonPusher.setPosition(LEFT);
+        sleep(1000);
+        drivePower(HALF_POWER);
         sleep(500);
-        driveStraightFor(40, 0.5);
+        drivePower(0);
         sleep(500);
         driveBackwardsFor(300, 0.5);
 
@@ -213,8 +221,10 @@ public class BEACON_RED extends LinearOpMode {
     public void hitRightButton() throws InterruptedException
     {
         buttonPusher.setPosition(RIGHT);
+        sleep(1000);
+        drivePower(HALF_POWER);
         sleep(500);
-        driveStraightFor(40, 0.5);
+        drivePower(0);
         sleep(500);
         driveBackwardsFor(300, 0.5);
 
@@ -238,7 +248,7 @@ public class BEACON_RED extends LinearOpMode {
 
         while (rightMotor.getCurrentPosition() > ticks)
         {
-            drivePower(power);
+            drivePower(-power);
         }
     }
 
@@ -252,6 +262,10 @@ public class BEACON_RED extends LinearOpMode {
         sleep(1000);
 
         popper.setPower(0);
+        ball.setPosition(IN);
+        sleep(1000);
+        ball.setPosition(OUT);
+        sleep(500);
 
         popper.setPower(1);
         sleep(1350);
@@ -295,12 +309,12 @@ public class BEACON_RED extends LinearOpMode {
 
 
     public void rotateLeft(double radians, double power) {
-        double radius = (203.6); //radius 9 inches in MM
+        double radius = (203.6) * (0.18750117); //radius 9 inches in MM
         double arc = radians * radius;
 
-        double ticks = leftMotor.getCurrentPosition() + MMtoTicks((int) arc);
+        int ticks =  rightMotor.getCurrentPosition() - (int) MMtoTicks((int) arc);
 
-        while (leftMotor.getCurrentPosition() < ticks) {
+        while (leftMotor.getCurrentPosition() > ticks) {
             turnLeft(power);
             getTelemetry();
             telemetry.addData("Target Positon:", ticks);
@@ -317,9 +331,9 @@ public class BEACON_RED extends LinearOpMode {
         double radius =  (203.6); //radius 9 inches in MM
         double arc = radians * radius;
 
-        double ticks = leftMotor.getCurrentPosition() - MMtoTicks((int) arc);
+        double ticks = leftMotor.getCurrentPosition() + MMtoTicks((int) arc);
 
-        while (leftMotor.getCurrentPosition() > ticks)
+        while (leftMotor.getCurrentPosition() < ticks)
         {
             getTelemetry();
             telemetry.addData("Target Positon:", ticks);
@@ -374,6 +388,7 @@ public class BEACON_RED extends LinearOpMode {
         popper = hardwareMap.dcMotor.get("popper");
         color = hardwareMap.colorSensor.get("color");
         buttonPush = hardwareMap.servo.get("buttonPusher");
+        ball = hardwareMap.servo.get("ball");
 
         lightSensor = hardwareMap.lightSensor.get("light sensor");
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range sensor");

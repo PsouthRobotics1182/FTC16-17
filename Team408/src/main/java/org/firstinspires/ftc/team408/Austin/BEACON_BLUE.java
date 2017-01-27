@@ -1,3 +1,34 @@
+/* Copyright (c) 2015 Qualcomm Technologies Inc
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted (subject to the limitations in the disclaimer below) provided that
+the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list
+of conditions and the following disclaimer.
+
+Redistributions in binary form must reproduce the above copyright notice, this
+list of conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.
+
+Neither the name of Qualcomm Technologies Inc nor the names of its contributors
+may be used to endorse or promote products derived from this software without
+specific prior written permission.
+
+NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+
 package org.firstinspires.ftc.team408.Austin;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
@@ -9,13 +40,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-
 @Autonomous(name = "BEACON BLUE", group = "LinearOpMode")
 public class BEACON_BLUE extends LinearOpMode {
     DcMotor leftMotor;
     DcMotor rightMotor;
     DcMotor popper;
 
+    Servo ball;
     Servo buttonPusher;
 
     LightSensor lightSensor;  // Hardware Device Object
@@ -37,6 +68,9 @@ public class BEACON_BLUE extends LinearOpMode {
     final static private double RIGHT = 0.0;
     final static private double LEFT = 1.0;
 
+    final static private double OUT = 0.6;
+    final static private double IN = 0.0;
+
 
     //andymark motor specs
     int ticksPerRevolutionAndy = 1120;
@@ -55,6 +89,7 @@ public class BEACON_BLUE extends LinearOpMode {
         while (opModeIsActive()) {
 
             //rotates to the right about 45 degrees
+            ball.setPosition(OUT);
             buttonPusher.setPosition(LEFT);
 
             lineThenButton("Blue");
@@ -64,6 +99,7 @@ public class BEACON_BLUE extends LinearOpMode {
             buttonPusher.setPosition(LEFT);
 
             lineThenButton("Blue");
+
             break;
 
 
@@ -171,8 +207,10 @@ public class BEACON_BLUE extends LinearOpMode {
     public void hitLeftButton() throws InterruptedException
     {
         buttonPusher.setPosition(LEFT);
+        sleep(1000);
+        drivePower(HALF_POWER);
         sleep(500);
-        driveStraightFor(40, 0.5);
+        drivePower(0);
         sleep(500);
         driveBackwardsFor(300, 0.5);
 
@@ -183,8 +221,10 @@ public class BEACON_BLUE extends LinearOpMode {
     public void hitRightButton() throws InterruptedException
     {
         buttonPusher.setPosition(RIGHT);
+        sleep(1000);
+        drivePower(HALF_POWER);
         sleep(500);
-        driveStraightFor(40, 0.5);
+        drivePower(0);
         sleep(500);
         driveBackwardsFor(300, 0.5);
 
@@ -208,7 +248,7 @@ public class BEACON_BLUE extends LinearOpMode {
 
         while (rightMotor.getCurrentPosition() > ticks)
         {
-            drivePower(power);
+            drivePower(-power);
         }
     }
 
@@ -222,6 +262,10 @@ public class BEACON_BLUE extends LinearOpMode {
         sleep(1000);
 
         popper.setPower(0);
+        ball.setPosition(IN);
+        sleep(1000);
+        ball.setPosition(OUT);
+        sleep(500);
 
         popper.setPower(1);
         sleep(1350);
@@ -265,12 +309,12 @@ public class BEACON_BLUE extends LinearOpMode {
 
 
     public void rotateLeft(double radians, double power) {
-        double radius = (203.6); //radius 9 inches in MM
+        double radius = (203.6) * (0.18750117); //radius 9 inches in MM
         double arc = radians * radius;
 
-        double ticks = leftMotor.getCurrentPosition() + MMtoTicks((int) arc);
+        int ticks =  rightMotor.getCurrentPosition() - (int) MMtoTicks((int) arc);
 
-        while (leftMotor.getCurrentPosition() < ticks) {
+        while (leftMotor.getCurrentPosition() > ticks) {
             turnLeft(power);
             getTelemetry();
             telemetry.addData("Target Positon:", ticks);
@@ -287,9 +331,9 @@ public class BEACON_BLUE extends LinearOpMode {
         double radius =  (203.6); //radius 9 inches in MM
         double arc = radians * radius;
 
-        double ticks = leftMotor.getCurrentPosition() - MMtoTicks((int) arc);
+        double ticks = leftMotor.getCurrentPosition() + MMtoTicks((int) arc);
 
-        while (leftMotor.getCurrentPosition() > ticks)
+        while (leftMotor.getCurrentPosition() < ticks)
         {
             getTelemetry();
             telemetry.addData("Target Positon:", ticks);
@@ -344,6 +388,7 @@ public class BEACON_BLUE extends LinearOpMode {
         popper = hardwareMap.dcMotor.get("popper");
         color = hardwareMap.colorSensor.get("color");
         buttonPush = hardwareMap.servo.get("buttonPusher");
+        ball = hardwareMap.servo.get("ball");
 
         lightSensor = hardwareMap.lightSensor.get("light sensor");
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range sensor");
