@@ -21,7 +21,7 @@ import java.util.Scanner;
 /**
  * Created by dzogh_000 on 12/4/2016.
  */
-@Autonomous
+//@Autonomous
 public class VuforiaTest extends LinearOpMode {
 
     @Override

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team406.tele.op;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -8,13 +8,15 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 /**
  * Created by Robotics on 11/4/2016.
  */
-@TeleOp(name="telephone")
+@TeleOp(name="telefone")
 public class TeleOperations extends OpMode {
 
     static final double MAX_POS     =  1.0;     // Maximum rotational position
@@ -27,11 +29,13 @@ public class TeleOperations extends OpMode {
     DcMotor launchMotor;
 
     CRServo button;
-    GyroSensor gyro;
 
     ColorSensor color;
 
     ModernRoboticsI2cRangeSensor range;
+
+    LightSensor lineC;
+    LightSensor lineF;
 
     //andymark motor specs
     int ticksPerRevolutionAndy = 1120;
@@ -52,20 +56,20 @@ public class TeleOperations extends OpMode {
 
         launchMotor = hardwareMap.dcMotor.get("launchM");
 
-        button = hardwareMap.crservo.get("serv");
+        range = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range");
 
-        gyro = hardwareMap.gyroSensor.get("gyro");
+        button = hardwareMap.crservo.get("serv");
 
         color = hardwareMap.colorSensor.get("color");
 
-        range = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range");
-        //range = hardwareMap.mode.get("range");
+        lineC = hardwareMap.lightSensor.get("lineC");
+        lineF = hardwareMap.lightSensor.get("lineF");
 
         rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         sweeperMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        launchMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        launchMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -102,7 +106,8 @@ public class TeleOperations extends OpMode {
         sweeperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        color.enableLed(false);
+        lineC.enableLed(true);
+        lineF.enableLed(true);
 
     }
     boolean press;
@@ -112,45 +117,23 @@ public class TeleOperations extends OpMode {
         double rightMotorPower = gamepad1.right_stick_y;
         double liftPower = gamepad2.left_stick_y;
 
-
-        leftMotorPower = scale(leftMotorPower);
-        rightMotorPower = scale(rightMotorPower);
+        //leftMotorPower = scale(leftMotorPower);
+        //rightMotorPower = scale(rightMotorPower);
         liftPower = liftPower/3;
 
-        //auto reoutine for testing
-        if(gamepad2.b){
-            button.setPower(0);
-            int blue = color.blue();
-            int red = color.red();
-            telemetry.addData("Color Blue", blue);
-            telemetry.addData("Color Red", red);
-
-
-            if (blue - red > 5) {
-                telemetry.clearAll();
-                telemetry.addData("Color", "Blue" + " " + color.argb());
-            }else if (red - blue > 5) {
-                telemetry.clearAll();
-                telemetry.addData("Color", "Red" + " " + color.argb());
-            } else {
-                telemetry.clearAll();
-                telemetry.addData("Color", color.argb());
-            }
-        }
-
-
+        if (gamepad1.dpad_up)
+            liftPower = 0.3;
+        else if (gamepad1.dpad_down)
+            liftPower = -0.3;
         if(gamepad2.left_bumper)
             button.setPower(-1);
         else if (gamepad2.right_bumper)
             button.setPower(1);
         else
             button.setPower(0);
-        if (gamepad2.a) {
-            //launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            int startPos = launchMotor.getCurrentPosition();
-            //launchMotor.setTargetPosition((int) (startPos+(ticksPerRevolutionAndy* 0.5)));
-            //launchMotor.setPower(.8);
 
+        if (gamepad2.a || gamepad1.a) {
+            int startPos = launchMotor.getCurrentPosition();
 
             while (launchMotor.getCurrentPosition() < startPos + (ticksPerRevolutionAndy * 1.2)) {
                 telemetry.addData("Cocking", "In Progress");
@@ -162,9 +145,9 @@ public class TeleOperations extends OpMode {
         }
 
         if (gamepad1.right_bumper) {
-            sweeperMotor.setPower(-0.5);
-        } else if (gamepad1.left_bumper) {
             sweeperMotor.setPower(0.5);
+        } else if (gamepad1.left_bumper) {
+            sweeperMotor.setPower(-0.5);
         } else
             sweeperMotor.setPower(0);
 
@@ -174,14 +157,15 @@ public class TeleOperations extends OpMode {
             telemetry.clearAll();
             telemetry.addData("Half ", "Power");
         }
-        if (gamepad2.right_trigger > 0.5){
+        if (gamepad1.right_trigger > 0.5){
 
-            rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-            leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+            //rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            //leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
             leftMotor = hardwareMap.dcMotor.get("rightM");
             rightMotor = hardwareMap.dcMotor.get("leftM");
+            telemetry.addData("Reversed", "");
         } else {
 
             leftMotor = hardwareMap.dcMotor.get("leftM");
@@ -190,27 +174,25 @@ public class TeleOperations extends OpMode {
             leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
-        if (gamepad2.x){
-            liftPower = -0.3;
-        }
-
         leftMotor.setPower(leftMotorPower);
         rightMotor.setPower(rightMotorPower);
         liftMotor.setPower(liftPower);
         String colors;
-        if (color.red() > color.blue())
+        if (color.red() - color.blue() > 2)
             colors = "red";
-        else if (color.red() < color.blue())
+        else if (color.blue() - color.red() > 2)
             colors = "blue";
         else colors = "unknown";
-        telemetry.addData("Gyro", gyro.getHeading());
+
+        //telemetry.addData("Gyro", gyro.getHeading());
         telemetry.addData("Lift Power", liftMotor.getPower());
         telemetry.addData("Right Power", rightMotor.getPower() + "/" + rightMotor.getCurrentPosition());
         telemetry.addData("Left Power", leftMotor.getPower() + "/" + leftMotor.getCurrentPosition());
         telemetry.addData("Color", colors);
+        telemetry.addData("Line center", lineC.getLightDetected() + " / "  + lineThereCenter());
+        telemetry.addData("Line front", lineF.getLightDetected() + " / " + lineThereFront());
         telemetry.addData("Range", range.cmUltrasonic());
         telemetry.addData("Servo Position", button.getPower());
-
     }
 
     public double scale(double power){
@@ -219,5 +201,18 @@ public class TeleOperations extends OpMode {
         else
             power = power * power;
         return power;
+    }
+
+    //checks for line precense
+    public boolean lineThereCenter() {
+        telemetry.addData("Line There", lineC.getLightDetected());
+        return lineC.getLightDetected() > 0.3;
+    }
+    public boolean lineThereFront() {
+        telemetry.addData("Line There", lineF.getLightDetected());
+        return lineF.getLightDetected() > 0.3;
+    }
+    public boolean lineThere(){
+        return lineThereCenter();
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team406.autonomous;
+package org.firstinspires.ftc.team406.autonomous.VuforiaAutonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -21,7 +21,7 @@ import java.util.Scanner;
 /**
  * Created by dzogh_000 on 12/4/2016.
  */
-@Autonomous
+//@Autonomous
 public class VuforiaNavigation extends LinearOpMode {
 
     @Override

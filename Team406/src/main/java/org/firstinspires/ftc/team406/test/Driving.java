@@ -1,50 +1,23 @@
-package org.firstinspires.ftc.teamcode.TestOpModes;
+package org.firstinspires.ftc.team406.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.lib.DriveSystem;
+import org.firstinspires.ftc.team406.lib.DriveSystem;
 
 /**
  * Created by dzogh_000 on 12/4/2016.
  */
-@Autonomous
-public class Driving extends LinearOpMode {
+//@Autonomous
+public class Driving extends DriveSystem {
     @Override
     public void runOpMode() throws InterruptedException {
-        DriveSystem robot = new DriveSystem();
+        configure();
 
         waitForStart();
 
-        robot.drive(700, 0.5);
+        driveD(200, 0.1);
 
-        sleep(1000);
-
-        robot.pivotRight(Math.PI/2, 0.2);
-
-        sleep(1000);
-
-        robot.drive(700, 0.5);
-
-        sleep(1000);
-
-        robot.pivotRight(Math.PI/2, 0.2);
-
-        sleep(1000);
-
-        robot.drive(700, 0.5);
-
-        sleep(1000);
-
-        robot.pivotRight(Math.PI/2, 0.2);
-
-        sleep(1000);
-
-        robot.drive(700, 0.5);
-
-        sleep(1000);
-
-        robot.pivotRight(Math.PI/2, 0.2);
 
     }
 }
