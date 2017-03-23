@@ -1,4 +1,4 @@
-/*
+
 package org.firstinspires.ftc.teamcode.VuforiaAutonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -125,10 +125,10 @@ public class VuforiaGears extends LinearOpMode {
         float botWidth = (float) 457.2;
         float feildWidth = 3658;
 
-        */
+
 /*to locate the robot based on the location of the trackable
         we must tell vuforia where the trackables are on the feild
-        we do this by using transformations from the origin to tell vuforia where the objects are*//*
+        we do this by using transformations from the origin to tell vuforia where the objects are*/
 
 
         //place the wheels on the wall.

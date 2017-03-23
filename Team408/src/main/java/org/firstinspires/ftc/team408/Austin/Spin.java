@@ -40,8 +40,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "BEACON RED", group = "LinearOpMode")
-public class BEACON_RED extends AutoLib {
+@Autonomous(name = "Spin", group = "LinearOpMode")
+public class Spin extends AutoLib {
 
     public void runOpMode() throws InterruptedException {
 
@@ -49,6 +49,6 @@ public class BEACON_RED extends AutoLib {
         config();
         waitForStart();
         setEncoders(); //Makes sure encoders are running
-        runRedAuto();
+        spin();
     }
 }
