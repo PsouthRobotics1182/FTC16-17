@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team408.Austin;
+package org.firstinspires.ftc.team408.AustinsOld2017Ops;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.*;
@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 
 @TeleOp(name = "TeleOp_408", group = "TeleOp")
+@Disabled
 public class TeleOp_408 extends OpMode
 {
 

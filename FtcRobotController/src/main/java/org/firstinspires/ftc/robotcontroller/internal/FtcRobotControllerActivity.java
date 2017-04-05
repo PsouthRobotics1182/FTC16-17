@@ -104,6 +104,8 @@ public class FtcRobotControllerActivity extends Activity {
 
   public static final String TAG = "RCActivity";
 
+  public static Context myContext;
+
   private static final int REQUEST_CONFIG_WIFI_CHANNEL = 1;
   private static final boolean USE_DEVICE_EMULATION = false;
   private static final int NUM_GAMEPADS = 2;
@@ -198,6 +200,9 @@ public class FtcRobotControllerActivity extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+
+    myContext = this;
+
     super.onCreate(savedInstanceState);
     RobotLog.vv(TAG, "onCreate()");
 

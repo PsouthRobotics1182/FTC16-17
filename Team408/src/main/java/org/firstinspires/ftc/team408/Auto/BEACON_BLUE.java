@@ -29,18 +29,13 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package org.firstinspires.ftc.team408.Austin;
+package org.firstinspires.ftc.team408.Auto;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.LightSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "BEACON BLUE", group = "LinearOpMode")
+import org.firstinspires.ftc.team408.Auto.AutoLib;
+
+@Autonomous(name = "BEACON BLUE", group = "Beacons")
 public class BEACON_BLUE extends AutoLib {
 
     public void runOpMode() throws InterruptedException {
@@ -48,7 +43,56 @@ public class BEACON_BLUE extends AutoLib {
         //Sets everything up and then waits for the start.
         config();
         waitForStart();
-        setEncoders(); //Makes sure encoders are running
         runBlueAuto();
+        return;
+    }
+
+    public void runBlueAuto() throws InterruptedException
+    {
+        //This is so the ball lift and button pusher are stable or out of the way and in the right place
+
+        //Goes until the line and then hits the blue button
+        lineThenButton("Blue");
+        buttonPusher.setPower(-1.0);
+        buttonPusherLeft.setPower(1.0);
+        driveStraightFor(200, 0.5); //Backs up to get in the right place for shooting
+        drivePower(0);
+        rotateLeft(Math.PI / 40, HALF_POWER); //Adjusts for shooting ball
+        //sleep(1000);
+        shootBalls();
+        buttonPusher.setPower(0);
+        buttonPusherLeft.setPower(0.0);
+
+        driveStraightFor(10, 0.5);
+
+        drivePower(0);
+        sleep(400);
+        //We are having it not go as far out so it can shoot better 2-13-17
+
+        //rotates about 90 degrees but not quite which is why 5 is only close to 4
+        rotateLeft(0.9 * Math.PI / 2.5, QUARTER_POWER);//Still turns slightly inconsistent, it may be better to over turn than under turn 2-13-17
+        //Makes sure the button pusher is in the right place
+
+
+        //Goes until the line and then hits the blue button
+        lineThenButton("Blue");//For some reason it turns too far here and I don't know why 2-14-17
+        driveStraightFor(300, 0.5);//Separates from wall so it doesn't stay on the button
+
+
+
+        //This is the new cap ball part
+        rotateLeft(1 * Math.PI / 2.5, FULL_POWER);
+
+        buttonPusher.setPower(-1.0);
+        buttonPusherLeft.setPower(1.0);
+        driveStraightFor(750, FULL_POWER);
+
+        buttonPusher.setPower(0);
+        buttonPusherLeft.setPower(0);
+
+
+
+
+
     }
 }

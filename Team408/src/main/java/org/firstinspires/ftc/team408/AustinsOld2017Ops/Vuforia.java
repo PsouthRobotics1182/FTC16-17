@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.team408.Austin;
+package org.firstinspires.ftc.team408.AustinsOld2017Ops;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.team408.R;
  */
 
 @Autonomous(name = "Vuforia", group = "LinearOpMode")
+@Disabled
 public class Vuforia extends LinearOpMode {
 
     VuforiaLocalizer vuforiaLocalizer;

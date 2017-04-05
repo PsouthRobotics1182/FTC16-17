@@ -29,18 +29,15 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package org.firstinspires.ftc.team408.Austin;
+package org.firstinspires.ftc.team408.AustinsOld2017Ops;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.LightSensor;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
+import org.firstinspires.ftc.team408.Auto.AutoLib;
 
 @Autonomous(name = "Spin", group = "LinearOpMode")
+@Disabled
 public class Spin extends AutoLib {
 
     public void runOpMode() throws InterruptedException {
@@ -48,7 +45,6 @@ public class Spin extends AutoLib {
         //Sets everything up and then waits for the start.
         config();
         waitForStart();
-        setEncoders(); //Makes sure encoders are running
         spin();
     }
 }

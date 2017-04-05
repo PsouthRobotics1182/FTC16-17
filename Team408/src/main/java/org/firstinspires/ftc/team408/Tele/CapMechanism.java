@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Hardware;
 
 /**
  * Created by Robotics on 3/16/2017.
@@ -39,8 +38,8 @@ public class CapMechanism {
         capMotorTop.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         capMotorBottom.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        capMotorTop.setMaxSpeed(AutoLibV2.maxTicksPerSecondAndy);
-        capMotorBottom.setMaxSpeed(AutoLibV2.maxTicksPerSecondAndy);
+        capMotorTop.setMaxSpeed(AutoLibV2.maxTicksPerSecondAndy40);
+        capMotorBottom.setMaxSpeed(AutoLibV2.maxTicksPerSecondAndy40);
     }
 
     public void setPower(double power){

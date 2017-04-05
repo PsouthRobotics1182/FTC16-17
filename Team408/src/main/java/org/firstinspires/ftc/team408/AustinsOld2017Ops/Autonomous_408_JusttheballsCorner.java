@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.team408.Austin;
+package org.firstinspires.ftc.team408.AustinsOld2017Ops;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,8 +14,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by Robotics on 11/21/2016.
  */
-@Autonomous(name = "BallsCorner BLUE", group = "LinearOpMode")
-public class Autonomous_408_JusttheballsCornerBlue extends LinearOpMode {
+@Autonomous(name = "BallsCorner RED", group = "LinearOpMode")
+@Disabled
+public class Autonomous_408_JusttheballsCorner extends LinearOpMode {
 
     DcMotor leftMotor;
     DcMotor rightMotor;
@@ -64,7 +66,7 @@ public class Autonomous_408_JusttheballsCornerBlue extends LinearOpMode {
 
         shootBalls();
 
-      //  rotateRight(1.65 * Math.PI / 2, HALF_POWER);
+        //rotateLeft(0.7 * Math.PI / 1.7, HALF_POWER);
 
         //driveBackwardsFor(1500, 0.5);
 

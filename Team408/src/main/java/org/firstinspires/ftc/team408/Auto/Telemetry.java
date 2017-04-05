@@ -1,18 +1,12 @@
-package org.firstinspires.ftc.team408.Austin;
+package org.firstinspires.ftc.team408.Auto;
 
 /**
  * Created by Robotics on 2/14/2017.
  */
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.LightSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.team408.Auto.AutoLib;
 
 
 @TeleOp(name = "Telemetry", group = "TeleOp")
@@ -42,12 +36,19 @@ public class Telemetry extends AutoLib {
             telemetry.addData("Light 1: ", lightSensor.getRawLightDetected());
             telemetry.addData("Light 2: ", lightSensor2.getRawLightDetected());
             telemetry.addData("Sonar: ", rangeSensor.rawUltrasonic());
+            telemetry.addData("Color Left RED", color.red());
+            telemetry.addData("Color Left BLUE", color.blue());
 
-            if (color.blue() > color.red()) {
+
+            if ((color.blue() > color.red())) {
                 telemetry.addData("Color Pick: ", "Blue");
             }
-            if (color.blue() < color.red()) {
+            else if (color.blue() < color.red()) {
                 telemetry.addData("Color Pick: ", "Red");
+            }
+            else
+            {
+                telemetry.addData("Color Pick: ", "None");
             }
 
             telemetry.update();
